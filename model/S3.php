@@ -24,7 +24,7 @@ class S3 {
 		return static::$singleton;
 	}
 
-	public static function uploadData($key,$data,$type,$acl='private')
+	public static function uploadData($key,$data,$type,$acl='public')
 	{
 		$s3 = static::singleton();
 		$r = $s3->client->putObject(
@@ -38,7 +38,7 @@ class S3 {
 		return $r;
 	}
 
-	public static function uploadFile($key,$filename,$type,$acl='private')
+	public static function uploadFile($key,$filename,$type,$acl='public')
 	{
 		$s3 = static::singleton();
 		$fp = fopen($filename,'rb');
@@ -55,7 +55,7 @@ class S3 {
 		return $r;
 	}
 
-	public static function rename($srckey,$dstkey,$acl='private')
+	public static function rename($srckey,$dstkey,$acl='public')
 	{
 		$s3 = static::singleton();
 		$bucket = $s3->config['bucket_name'];
