@@ -8,7 +8,7 @@ class ApplicationController extends Controller
     {
         return view('pages.packages.index');
     }
-
+    
     public function index()
     {
         return view('pages.app_index');
