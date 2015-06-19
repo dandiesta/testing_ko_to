@@ -59,7 +59,7 @@
         <ul class="nav navbar-nav navbar-right">
             <li><a href="{{ route('login') }}">Login</a></li>
         </ul>
-        {{--@endif--}}
+        @endif
     </div>
 </div>
 
