@@ -15,6 +15,10 @@ Route::get('/', ['as' => 'login', 'uses' => 'AuthController@login']);
 
 Route::post('/authenticate', ['as' => 'authenticate', 'uses' => 'AuthController@authenticate']);
 
+Route::get('/myapps/own',    ['as' => 'my_apps',      'uses' => 'ApplicationController@my_apps']);
+Route::get('/myapps/own',    ['as' => 'my_apps',      'uses' => 'ApplicationController@my_apps']);
+
+
 Route::get('home', 'HomeController@index');
 
 Route::controllers([
