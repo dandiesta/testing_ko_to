@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePackageTagTable extends Migration {
+class CreateApplicationOwnerTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,11 +12,11 @@ class CreatePackageTagTable extends Migration {
 	 */
 	public function up()
 	{
-        Schema::create('package_tag', function(Blueprint $table)
+        Schema::create('application_owner', function(Blueprint $table)
         {
             $table->increments('id');
-            $table->integer('package_id')->references('id')->on('package');
-            $table->integer('tag_id')->references('id')->on('tag');
+            $table->integer('app_id')->references('id')->on('application');
+            $table->string('owner_email')->references('mail')->on('user_pass');
             $table->timestamps();
         });
 	}
@@ -28,7 +28,7 @@ class CreatePackageTagTable extends Migration {
 	 */
 	public function down()
 	{
-        Schema::drop('package_tag');
+        Schema::drop('application_owner');
 	}
 
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePackageTagTable extends Migration {
+class CreateUserPassTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,13 +12,13 @@ class CreatePackageTagTable extends Migration {
 	 */
 	public function up()
 	{
-        Schema::create('package_tag', function(Blueprint $table)
-        {
+		Schema::create('user_pass', function(Blueprint $table)
+		{
             $table->increments('id');
-            $table->integer('package_id')->references('id')->on('package');
-            $table->integer('tag_id')->references('id')->on('tag');
+			$table->string('mail', 100)->unique();
+			$table->string('passhash');
             $table->timestamps();
-        });
+		});
 	}
 
 	/**
@@ -28,7 +28,7 @@ class CreatePackageTagTable extends Migration {
 	 */
 	public function down()
 	{
-        Schema::drop('package_tag');
+		Schema::drop('user_pass');
 	}
 
 }

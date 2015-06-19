@@ -5,3 +5,4 @@ web/font-awesome/
 web/jquery/
 dbauth/
 .idea/
+.env

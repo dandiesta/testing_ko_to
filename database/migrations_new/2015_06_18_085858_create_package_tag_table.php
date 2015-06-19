@@ -15,8 +15,8 @@ class CreatePackageTagTable extends Migration {
         Schema::create('package_tag', function(Blueprint $table)
         {
             $table->increments('id');
-            $table->integer('package_id')->references('id')->on('package');
-            $table->integer('tag_id')->references('id')->on('tag');
+            $table->int('package_id')->references('id')->on('packages');
+            $table->int('tag_id')->references('id')->on('tag');
             $table->timestamps();
         });
 	}
