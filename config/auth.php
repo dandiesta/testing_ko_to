@@ -1,18 +1,10 @@
 <?php
 
 return [
-    "multi" => [
-        "tester" => [
-            'driver' => 'eloquent',
-            'model' => 'App\Tester',
-            'table' => 'testers',
-        ],
-        "developer" => [
-            'driver' => 'eloquent',
-            'model' => 'App\Developer',
-            'table' => 'developers',
-        ],
-    ],
+    'driver' => 'eloquent',
+    'model'  => 'App\UserPass',
+    'table'  => 'user_pass',
+
     'password' => [
         'email' => 'partials.email.reminder',
         'table' => 'password_resets',
