@@ -6,3 +6,6 @@ web/jquery/
 dbauth/
 .idea/
 .env
+/vendor
+/node_modules
+app/storage/
