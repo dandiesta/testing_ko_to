@@ -1,8 +1,12 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
 
     public function login()
     {
@@ -13,8 +17,7 @@ class AuthController extends Controller {
     {
         $input = Request::all();
 
-        $hash = Hash::make($input['password']);
-        dd($hash);
+
 
         return view('pages.login');
     }
