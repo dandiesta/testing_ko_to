@@ -107,6 +107,7 @@ foreach($top_comments as $c):
           <span class="info visible-xs visible-sm"><?=$pkg->getCreated('Y-m-d H:i')?></span>
         </td>
         <td class="text-center">
+
 <?php if($login_user->getPackageInstalledDate($pkg)): ?>
           <a class="btn btn-success install-link col-xs-12" href="<?=$pkg->getInstallUrl()?>"><i class="fa fa-check"></i> Installed</a>
 <?php else: ?>

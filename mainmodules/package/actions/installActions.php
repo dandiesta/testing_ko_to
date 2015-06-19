@@ -24,8 +24,7 @@ class installActions extends packageActions
 	public function executeInstall()
 	{
 		$pf = $this->package->getPlatform();
-		$ua = mfwRequest::userAgent();
-
+			$ua = mfwRequest::userAgent();
 		if($pf===Package::PF_IOS && $ua->isIOS()){
 			// itms-service での接続はセッションを引き継げない
 			// 一時トークンをURLパラメータに付けることで認証する
