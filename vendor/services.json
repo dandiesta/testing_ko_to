@@ -1,6 +1,7 @@
 {
     "providers": [
         "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
+        "Illuminate\\Auth\\AuthServiceProvider",
         "Illuminate\\Bus\\BusServiceProvider",
         "Illuminate\\Cache\\CacheServiceProvider",
         "Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider",
@@ -26,10 +27,10 @@
         "App\\Providers\\BusServiceProvider",
         "App\\Providers\\ConfigServiceProvider",
         "App\\Providers\\EventServiceProvider",
-        "App\\Providers\\RouteServiceProvider",
-        "Ollieread\\Multiauth\\MultiauthServiceProvider"
+        "App\\Providers\\RouteServiceProvider"
     ],
     "eager": [
+        "Illuminate\\Auth\\AuthServiceProvider",
         "Illuminate\\Routing\\ControllerServiceProvider",
         "Illuminate\\Cookie\\CookieServiceProvider",
         "Illuminate\\Database\\DatabaseServiceProvider",
@@ -44,8 +45,7 @@
         "App\\Providers\\BusServiceProvider",
         "App\\Providers\\ConfigServiceProvider",
         "App\\Providers\\EventServiceProvider",
-        "App\\Providers\\RouteServiceProvider",
-        "Ollieread\\Multiauth\\MultiauthServiceProvider"
+        "App\\Providers\\RouteServiceProvider"
     ],
     "deferred": {
         "command.app.name": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",

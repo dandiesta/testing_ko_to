@@ -33,7 +33,7 @@
         <a href="{{ route('login') }}" class="navbar-brand"><span>EMLauncher</span></a>
     </div>
     <div class="collapse navbar-collapse navbar-ex1-collapse">
-        @if(Auth::tester()->check())
+        @if(Auth::check())
         <ul class="nav navbar-nav">
             <li><a href="{{ route('login') }}">Top</a></li>
             <li class="dropdown">
@@ -48,13 +48,14 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ htmlspecialchars($login_user->getMail()) }} <b class="caret"></b></a>
+                {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown">--}}{{-- htmlspecialchars($login_user->getMail()) --}}{{-- <b class="caret"></b></a>--}}
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ htmlspecialchars(/*$login_user->getMail()*/'derp@derp.com') }} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Logout</a></li>
+                    <li><a href="{{ route('logout') }}">Logout</a></li>
                 </ul>
             </li>
         </ul>
-        @else
+        {{--@else--}}
         <ul class="nav navbar-nav navbar-right">
             <li><a href="{{ route('login') }}">Login</a></li>
         </ul>

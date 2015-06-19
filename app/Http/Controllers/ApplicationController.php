@@ -9,6 +9,16 @@ use App\Application;
 
 class ApplicationController extends Controller
 {
+    public function package()
+    {
+        return view('pages.packages.index');
+    }
+
+    public function index()
+    {
+        return view('pages.app_index');
+    }
+
     public function my_apps()
     {
         $user_id = 1;//assuming we can get this from laravel auth

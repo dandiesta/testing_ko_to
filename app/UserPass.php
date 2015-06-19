@@ -1,13 +1,38 @@
 <?php namespace App;
 
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class UserPass extends Model {
+class UserPass extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
-    protected $table = 'user_pass';
+	use Authenticatable, CanResetPassword;
 
-    public function application() {
-        return $this->belongsToMany('App\Application', 'application_owner', 'owner_email', 'app_id');
+	/**
+	 * The database table used by the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'user_pass';
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = ['mail', 'passhash'];
+
+	/**
+	 * The attributes excluded from the model's JSON form.
+	 *
+	 * @var array
+	 */
+	protected $hidden = ['password', 'remember_token'];
+
+    public function getAuthPassword() {
+        return $this->passhash;
     }
 
 }

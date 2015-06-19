@@ -1,11 +1,23 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Auth;
 
-class AuthController extends Controller {
+class AuthController extends Controller
+{
 
     public function login()
     {
+        return view('pages.login');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+
         return view('pages.login');
     }
 
@@ -13,9 +25,10 @@ class AuthController extends Controller {
     {
         $input = Request::all();
 
-        $hash = Hash::make($input['password']);
-        dd($hash);
+        if (Auth::attempt(['mail' => $input['email'], 'password' => $input['password']])) {
+            return view('pages.login');
+        }
 
-        return view('pages.login');
+        dd('Why', $input);
     }
 }
