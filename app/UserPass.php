@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\DB;
 
@@ -44,5 +45,13 @@ class UserPass extends Model implements AuthenticatableContract, CanResetPasswor
             ->count();
 
         return $count;
+    }
+
+    public static function isAppNotify($app_id)
+    {
+        return DB::table('app_install_user')
+            ->where('app_id', $app_id)
+            ->where('mail', Auth::user()->mail)
+            ->first()->notify;
     }
 }

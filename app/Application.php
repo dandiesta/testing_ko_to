@@ -17,37 +17,39 @@ class Application extends Model {
 
     public static function getUserAppsByEmail($email)
     {
-        $app_list = DB::table('application_owner')->select('app_id')->where('owner_email', $email)->get();
+        $app_list = DB::table('application_owner as ao')
+            ->join('application as app', 'ao.app_id', '=', 'app.id')
+            ->select('app_id', 'app.*')->where('owner_email', $email)
+            ->orderBy('updated_at', 'DESC')
+            ->get();
+
         $applications = [];
-        foreach ($app_list as $app) {
-            $applications[] = DB::table('application')
-                ->selectRaw('
-                    application.*,
-                    (SELECT COUNT(app_id) FROM app_install_user WHERE app_id = application.id) as install_user_count,
-                    (SELECT package.created_at FROM package WHERE app_id = application.id ORDER BY package.created_at DESC LIMIT 1) as upload_time,
-                    (SELECT last_installed FROM app_install_user WHERE app_id = application.id AND mail = "'.$email.'" LIMIT 1) as app_install_date,
-                    (SELECT notify FROM app_install_user WHERE app_id = application.id AND mail = "'.$email.'" LIMIT 1) as notify_setting
-                ')
-                ->where('id', $app->app_id)->first();
+        foreach($app_list as $app)
+        {
+            $app->user_count = UserPass::getCountUsersByApp($app->app_id);
+            $app->latest_user_install = self::getLatestUserInstallDate($email, $app->app_id);
+            $app->notify = UserPass::isAppNotify($app->app_id);
+            $applications[] = $app;
         }
+
         return $applications;
     }
 
     public static function getInstalledAppsByEmail($email)
     {
-        $app_list = DB::table('app_install_user')->select('app_id')->where('mail', $email)->get();
+        $app_list = DB::table('app_install_user as aiu')
+            ->join('application as app', 'aiu.app_id', '=', 'app.id')
+            ->select('app_id', 'app.*')->where('mail', $email)
+            ->orderBy('app.updated_at', 'DESC')
+            ->get();
+
         $applications = [];
         foreach ($app_list as $app) {
-            $applications[] = DB::table('application')
-                ->selectRaw('
-                    application.*,
-                    (SELECT COUNT(app_id) FROM app_install_user WHERE app_id = application.id) as install_user_count,
-                    (SELECT package.created_at FROM package WHERE app_id = application.id ORDER BY package.created_at DESC LIMIT 1) as upload_time,
-                    (SELECT last_installed FROM app_install_user WHERE app_id = application.id AND mail = "'.$email.'" LIMIT 1) as app_install_date,
-                    (SELECT notify FROM app_install_user WHERE app_id = application.id AND mail = "'.$email.'" LIMIT 1) as notify_setting
-                ')
-                ->where('id', $app->app_id)->first();
+            $app->latest_user_install = self::getLatestUserInstallDate($email, $app->app_id);
+            $app->notify = UserPass::isAppNotify($app->app_id);
+            $applications[] = $app;
         }
+
         return $applications;
     }
 
