@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-# models
-use App\ApplicationOwner;
-use App\UserPass;
-use App\Application;
-
-# general classes
+# general
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
+
+# models
+use App\ApplicationOwner;
+use App\UserPass;
+use App\Application;
 
 class ApplicationController extends Controller
 {
@@ -21,10 +22,14 @@ class ApplicationController extends Controller
     }
 
     public function index() {
-//        $app_id = \Request::input('id');
+        $app_id = Request::input('id');
 //        $app = Application::getAppById($app_id);
 //        $pf = \Request::input('pf');
-//        return view('app.index');
+
+        $data['details'] = Application::getAppDetails($app_id);
+        $data['packages'] = Application::getAppPackages($app_id);
+
+        return view('app', $data);
     }
 
     public function top_apps()

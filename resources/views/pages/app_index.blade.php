@@ -18,13 +18,13 @@
                 {{--Link to App Page--}}
                 <a href="#">
                     {{--App's Icon--}}
-                    <img class="app-icon-sm media-object img-rounded" src="https://s3-ap-southeast-1.amazonaws.com/app-klab-reserve/globe_telecom/ahue.png">
+                    <img class="app-icon-sm media-object img-rounded" src="{{ env('AWS_URL') . $app->icon_key }}">
                 </a>
             </p>
             <div class="media-body">
                 <h3 class="media-hedding">
                     {{--App Title; Also a link--}}
-                    <a href="#">{{ $app->title }}</a>
+                    <a href="{{ route('app', ['id' => $app->id]) }}">{{ $app->title }}</a>
                     {{--Comments Count--}}
                     @if(!empty($app->comment_count) && $app->comment_count > 0)
                     <div class="balloon">
