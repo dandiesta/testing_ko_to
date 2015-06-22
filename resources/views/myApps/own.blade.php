@@ -19,13 +19,13 @@
       <a href="{{ "/app?id={$app->id}" }}">
         {{ htmlspecialchars($app->title) }}
       </a>
-      <small title="Installed by {{ $app->install_user_count }} users" class="badge">{{ $app->install_user_count }}</small>
+      <small title="Installed by {{ $app->user_count }} users" class="badge">{{ $app->user_count }}</small>
     </h3>
     <p>
-      {{ ($app->upload_time)?'last uploaded':'created' }}: {{ date('Y-m-d H:i',strtotime(($app->upload_time)?$app->upload_time:$app->created_at)) }}
-<?php if($app->app_install_date && $app->upload_time > $app->app_install_date): ?>
+      {{ (strtotime($app->updated_at) > strtotime($app->created_at)) ? 'Last Uploaded: ' . date('Y-m-d H:i',strtotime($app->updated_at)) :'Created: ' . date('Y-m-d H:i',strtotime($app->created_at)) }}
+<?php if(!empty($app->latest_user_install) && $app->updated_at > $app->latest_user_install): ?>
       <span class="label label-success">UPDATE</span>
-<?php elseif(strtotime($app->upload_time)>strtotime('yesterday')): ?>
+<?php elseif(strtotime($app->updated_at)>strtotime('yesterday')): ?>
       <span class="label label-primary">NEW</span>
 <?php endif ?>
     </p>

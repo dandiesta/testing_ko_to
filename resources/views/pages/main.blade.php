@@ -39,8 +39,8 @@
             <li class="dropdown">
                 <a hfer="#" class="dropdown-toggle" data-toggle="dropdown">My apps <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Installed Apps</a></li>
-                    <li><a href="#">Own Apps</a></li>
+                    <li><a href="{{ route('installed_apps') }}">Installed Apps</a></li>
+                    <li><a href="{{ route('my_apps') }}">Own Apps</a></li>
                 </ul>
             </li>
             <li><a href="#">API doc</a></li>
