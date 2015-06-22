@@ -134,11 +134,16 @@ class Application extends Model {
 
     public static function getAppPackages($app_id)
     {
-        $app = DB::table('package')
+        $apps = DB::table('package')
             ->where('app_id', $app_id)
             ->get();
-
-        return $app;
+        $packages = [];
+        foreach ($apps as $app) {
+            $app->max_file_size = 50*1024*1024;//50 MB
+            $app->is_file_size_warned = ($app->max_file_size < $app->file_size);
+            $packages[] = $app;
+        }
+        return $packages;
     }
-    
+
 }

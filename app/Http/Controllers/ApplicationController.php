@@ -14,6 +14,7 @@ use App\ApplicationOwner;
 use App\UserPass;
 use App\Application;
 use App\Comment;
+use App\Package;
 
 class ApplicationController extends Controller
 {
@@ -28,6 +29,7 @@ class ApplicationController extends Controller
         $pf = Request::input('pf', 'all');
         $filter_open = Request::input('filter_open', 0);
         $current_page = Request::input('current_page ', 1);
+        $is_file_size_warned = false;
 
         $input['page'] = $current_page + 1;
         $next_page_url = route('app', $input);
@@ -35,9 +37,9 @@ class ApplicationController extends Controller
         $prev_page_url = route('app', $input);
 
         $app = Application::getAppById($app_id);
-        $comment_count = 0; //Comment::getCountByApplication($app_id);
+        $comment_count = Comment::getCountByApplication($app_id);
         $top_comments = Comment::getTopByApplicationId($app_id);
-        $commented_package = [];//$commented_package = Package::getCommentedByIds(Comment::getPackageIdsByApplicationId($app_id));
+        $commented_package = Package::getCommentedByIds(Comment::getPackageIdsByApplicationId($app_id));
 
         $app->install_user_count = UserPass::getCountUsersByApp($app_id);
         $app->latest_user_install = Application::getLatestUserInstallDate(Auth::user()->mail, $app_id);
@@ -46,7 +48,11 @@ class ApplicationController extends Controller
         $app->owners = Application::getOwnersByAppId($app_id);
         $app->tags = Application::getTagsByAppId($app_id);
 
-        $packages = [];
+        $packages = Application::getAppPackages($app_id);
+        foreach ($packages as $package) {
+            $package->tags = Package::getTagsByPackageId($package->id);
+        }
+        $next_page_url = count($packages) > 20 ? $next_page_url : null;
 
         $data = [
             'app' => $app,
@@ -60,6 +66,7 @@ class ApplicationController extends Controller
             'current_page' => $current_page,
             'next_page_url' => $next_page_url,
             'prev_page_url' => $prev_page_url,
+            'is_file_size_warned' => $is_file_size_warned,
         ];
         return view('app.index', $data);
     }

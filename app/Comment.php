@@ -32,7 +32,7 @@ class Comment extends Model {
     public static function getPackageIdsByApplicationId($app_id)
     {
         return DB::table('comment')
-            ->select('package_id')
+            ->selectRaw('DISTINCT package_id')
             ->where('app_id', $app_id)
             ->get();
     }

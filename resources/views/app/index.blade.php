@@ -45,12 +45,12 @@
           <div class="text-right">
 @if($pkg)
             <a href="{{ url("/package?id={$pkg->id}") }}">
-            @include('pages/partials/platform_icon.blade.php')
+            @include('pages/partials/platform_icon')
             {{ htmlspecialchars($pkg->title) }}</a>
 @else
             <span>No package installed</span>
 @endif
-            ({{ date('Y-m-d H:i', $c->created_at) }})
+            ({{ date('Y-m-d H:i', strtotime($c->created_at)) }})
           </div>
         </li>
 @endforeach
@@ -84,10 +84,10 @@
     </div>
 
     <table id="package-list" class="table table-hover">
-@foreach($packages as $pkg)
+@foreach($packages as $key => $pkg)
       <tr>
         <td class="text-center logo">
-          @include('pages/partials/platform_icon.blade.php')
+          @include('pages/partials/platform_icon')
         </td>
         <td class="package-list-item-info">
           <div class="row">
@@ -96,11 +96,11 @@
 @if($pkg->description)
       <p class="text-muted description">{{ $pkg->description }}</p>
 @endif
-              <span class="info hidden-xs hidden-sm">{{ $pkg->file_size?round($pkg->file_size/1024/1024,1):'--' }} MB, {{ date('Y-m-d H:i', $pkg->created_at) }}</span>
+              <span class="info hidden-xs hidden-sm">{{ $pkg->file_size?round($pkg->file_size/1024/1024,1):'--' }} MB, {{ date('Y-m-d H:i', strtotime($pkg->created_at)) }}</span>
             </div>
             <div class="col-xs-12 col-md-5">
 @if($pkg->is_file_size_warned)
-              <span class="label label-danger">Over {{ $pkg->file_size_limit() }} MB</span>
+              <span class="label label-danger">Over {{ $pkg->file_size_limit }} MB</span>
 @endif
 @foreach($pkg->tags as $tag)
               <span class="label label-default" data="{{ htmlspecialchars($tag->name) }}">{{ htmlspecialchars($tag->name) }}</span>
@@ -108,7 +108,7 @@
             </div>
           </div>
       <span class="info visible-xs visible-sm">{{ $pkg->file_size?round($pkg->file_size/1024/1024,1):'--' }} MB</span>
-          <span class="info visible-xs visible-sm">{{ date('Y-m-d H:i', $pkg->created_at) }}</span>
+          <span class="info visible-xs visible-sm">{{ date('Y-m-d H:i', strtotime($pkg->created_at)) }}</span>
         </td>
         <td class="text-center">
 @if($app->latest_user_install)
