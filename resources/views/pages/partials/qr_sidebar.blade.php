@@ -4,9 +4,9 @@
     <div class="list-group-item">
         <ul class="nav nav-pills nav-stacked">
             <li @if ($current_page == 'edit_package') class="active" @endif>
-                <a href="{{ route('edit_package', ['id' => $id]) }}"><i class="fa fa-pencil"></i> Edit</a>
+                <a href="{{ route('edit_package', ['id' => $app->id]) }}"><i class="fa fa-pencil"></i> Edit</a>
             </li>
-            <li>
+            <li @if ($current_page == 'delete_package') class="active" @endif>
                 <a href=""><i class="fa fa-trash-o"></i> Delete</a>
             </li>
         </ul>

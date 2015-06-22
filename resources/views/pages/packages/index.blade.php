@@ -3,12 +3,12 @@
 @section('content')
 <div class="media">
     <p class="pull-left">
-        <a href=""> {{-- /app?id={$app->getId()} --}}
-            <img class="app-icon media-object img-rounded" src="{{ asset('apple-touch-icon.png') }}"> {{-- $app->getIconUrl() --}}
+        <a href="{{ route('app', ['id' => $app->app_id]) }}"> {{-- /app?id={$app->getId()} --}}
+            <img class="app-icon media-object img-rounded" src="{{ env('AWS_URL') . $app->icon_key }}"> {{-- $app->getIconUrl() --}}
         </a>
     </p>
     <div class="media-body">
-        <h2 class="media-hedding"><a href="">TITLE GOES HERE{{-- htmlspecialchars($app->getTitle()) --}}</a></h2> {{-- url("/app?id={$app->getId()}") --}}
+        <h2 class="media-hedding"><a href="{{ route('app', ['id' => $app->app_id]) }}">{{ $app->app_title }}</a></h2> {{-- url("/app?id={$app->getId()}") --}}
     </div>
 </div>
 
@@ -22,23 +22,18 @@
         <div class="row">
             <div class="col-xs-7">
                 <h3>
-                    <a href="">
-                        @if ($market == 'ios')
-                            <span><i class="fa fa-apple"></i> Ios</span>
-                        @else
-                            <i class="fa fa-android"></i> Android
+                    <a href="{{ route('package', ['id' => $app->id]) }}">
+                        @if ($app->platform == 'iOS')
+                            <i class="fa fa-apple"></i>
+                        @elseif ($app->platform == 'android')
+                            <i class="fa fa-android"></i>
                         @endif
-                        {{-- url("/package?id={$package->getId()}") --}}
-                        {{-- block('platform_icon') --}}{{--asf--}}
-                        {{-- htmlspecialchars($package->getTitle()) --}}
+
+                        &nbsp;{{ $app->title }}
                     </a>
                 </h3>
                 <p>
-                    {{-- nl2br(htmlspecialchars($package->getDescription())) --}}
-                    Built at:2015-06-19_10-34-21
-                    Branch:origin/1.20.1/develop
-                    e02435713587ce319b7e72c80eedc0d5cfede5b0
-                    https://redmine.cyscorpions.com/projects/lods-eu-ios/repository/revisions/e02435713587ce319b7e72c80eedc0d5cfede5b0
+                    {{ $app->description }}
                 </p>
             </div>
             <div class="col-xs-5">
@@ -55,24 +50,30 @@
         </div>
 
         <p>
-            {{-- if($package->isFileSizeWarned()): --}}
-                <span class="label label-danger">Over 100{{-- $package->getFileSizeLimitMB() --}} MB</span>
-            {{-- endif --}}
-            {{-- foreach($package->getTags() as $tag): --}}
-                <span class="label label-default">yo{{-- htmlspecialchars($tag->getName()) --}}</span>
-            <span class="label label-default">hey{{-- htmlspecialchars($tag->getName()) --}}</span>
-            {{-- endforeach --}}
+             @if(floor(($app->file_size/1024)/1024) > 0)
+                <span class="label label-danger">Over {{ \App\Package::isFileSizeWarned($app->file_size) }} {{-- $package->getFileSizeLimitMB() --}} MB</span>
+             @endif
+
+             @foreach($tags as $tag)
+                <span class="label label-default">{{ $tag->name }}</span>
+             @endforeach
         </p>
 
         <dl class="dl-horizontal">
             <dt>Platform</dt>
-            <dd>{{-- block('platform_icon',array('with_name'=>true)) --}} <i class="fa fa-apple"></i> ios (with image dapat to)</dd>
+            <dd>
+                @if ($app->platform == 'iOS')
+                    <i class="fa fa-apple"></i> iOS
+                @elseif($app->platform == 'android')
+                    <i class="fa fa-apple"></i> iOS
+                @endif
+            </dd>
             <dt>Original name</dt>
-            <dd>{{-- $package->getOriginalFileName()?:'--------.'.pathinfo($package->getBaseFileName(),PATHINFO_EXTENSION) --}}asdf</dd>
+            <dd>{{ $app->original_file_name }}</dd>
             <dt>File size</dt>
-            <dd>{{-- $package->getFileSize()?number_format($package->getFileSize()):'-' --}}110,000,000 bytes</dd>
-            <dt>Install user</dt>
-            {{-- if($app->isOwner($login_user)): --}}
+            <dd> {{ $app->file_size ? number_format($app->file_size):'-' }} bytes</dd>
+            <dt>Installed user</dt>
+{{--             @if($app->isOwner($login_user)):--}}
                 {{--<dd>--}}
                     {{--<div class="dropdown">--}}
                         {{--<a class="dropdown-toggle" id="install-user-count" data-toggle="dropdown">--}}
@@ -85,10 +86,10 @@
                     {{--</div>--}}
                 {{--</dd>--}}
             {{-- else: --}}
-                <dd>{{-- $package->getInstallCount() --}}1234</dd>
+                <dd>{{ $user_count }}</dd>
             {{-- endif --}}
             <dt>Uploaded</dt>
-            <dd>{{-- $package->getCreated() --}}2015-06-19 11:01:37</dd>
+            <dd>{{-- $package->getCreated() --}}{{ date('Y-m-d H:i:s', strtotime($app->created_at)) }}</dd>
             <dt>Owners</dt>
             {{-- foreach($app->getOwners() as $owner): --}}
                 <dd><a href="mailto:{{-- $owner->getOwnerMail()?> --}} {{-- $owner->getOwnerMail() --}}">ASD</a></dd>
