@@ -14,7 +14,7 @@
     <link href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/spacelab/bootstrap.min.css" rel="stylesheet" media="screen">
     <script src="//code.jquery.com/jquery.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     {{--@endif--}}
     <link rel="stylesheet" href="{{ asset('css/customize.css') }}" type="text/css">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
@@ -62,12 +62,14 @@
         <ul class="nav navbar-nav navbar-right">
             <li><a href="{{ route('login') }}">Login</a></li>
         </ul>
-        {{--@endif--}}
+        @endif
     </div>
 </div>
 
 <div class="container">
     @yield('content')
 </div>
+
+@yield('scripts')
 </body>
 </html>

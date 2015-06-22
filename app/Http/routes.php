@@ -7,8 +7,8 @@ Route::post('/authenticate', ['as' => 'authenticate', 'uses' => 'AuthController@
 Route::get('/logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
 
 // packages
-Route::get('/package', ['as' => 'package', 'uses' => 'ApplicationController@packages' ]); //dapat may id to
-
+Route::get('/package', ['as' => 'package', 'uses' => 'PackageController@index' ]); //dapat may id to
+Route::get('/package/edit', ['as' => 'edit_package', 'uses' => 'PackageController@edit' ]);
 
 
 Route::controllers([
