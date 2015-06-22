@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-# models
-use App\ApplicationOwner;
-use App\UserPass;
-use App\Application;
-
 # general classes
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
+
+# models
+use App\ApplicationOwner;
+use App\UserPass;
+use App\Application;
+use App\Comment;
+
 
 class ApplicationController extends Controller
 {
@@ -21,10 +24,45 @@ class ApplicationController extends Controller
     }
 
     public function index() {
-//        $app_id = \Request::input('id');
-//        $app = Application::getAppById($app_id);
-//        $pf = \Request::input('pf');
-//        return view('app.index');
+        $input = Request::all();
+        $app_id = $input['id'];
+        $pf = Request::input('pf', 'all');
+        $filter_open = Request::input('filter_open', 0);
+        $current_page = Request::input('current_page ', 1);
+
+        $input['page'] = $current_page + 1;
+        $next_page_url = route('app', $input);
+        $input['page'] = $current_page - 2;
+        $prev_page_url = route('app', $input);
+
+        $app = Application::getAppById($app_id);
+        $comment_count = 0; //Comment::getCountByApplication($app_id);
+        $top_comments = Comment::getTopByApplicationId($app_id);
+        $commented_package = [];//$commented_package = Package::getCommentedByIds(Comment::getPackageIdsByApplicationId($app_id));
+
+        $app->install_user_count = UserPass::getCountUsersByApp($app_id);
+        $app->latest_user_install = Application::getLatestUserInstallDate(Auth::user()->mail, $app_id);
+        $app->is_owner = Application::checkUserOwnerByAppId(Auth::user()->mail, $app_id);
+        $app->install_user = Application::getInstallUserByAppId($app_id);
+        $app->owners = Application::getOwnersByAppId($app_id);
+        $app->tags = Application::getTagsByAppId($app_id);
+
+        $packages = [];
+
+        $data = [
+            'app' => $app,
+            'pf' => $pf,
+            'comment_count' => $comment_count,
+            'top_comments' => $top_comments,
+            'commented_package' => $commented_package,
+            'action' => 'app',
+            'filter_open' => $filter_open,
+            'packages' => $packages,
+            'current_page' => $current_page,
+            'next_page_url' => $next_page_url,
+            'prev_page_url' => $prev_page_url,
+        ];
+        return view('app.index', $data);
     }
 
     public function top_apps()
@@ -37,7 +75,6 @@ class ApplicationController extends Controller
             Paginator::resolveCurrentPage(),
             ['path' => Paginator::resolveCurrentPath()]
         );
-
         $data['applications'] = $paginator;
 
         return view('pages.app_index', $data);

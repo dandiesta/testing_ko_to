@@ -16,7 +16,7 @@
 
 <div class="row">
   <div class="col-sm-4 col-md-3 hidden-xs">
-    @include('pages/partials/app_infopanel.blade.php')
+    @include('pages/partials/app_infopanel')
   </div>
 
 
@@ -28,7 +28,7 @@
           <h3>{{ $comment_count }} comments</h3>
         </div>
         <div class="col-xs-6 text-right">
-          <a href="{{ url("/app/comment?id={$app->getId()}") }}" class="btn btn-sm btn-default"><i class="fa fa-pencil"></i> write a comment</a>
+              <a href="{{ url("/app/comment?id={$app->id}") }}" class="btn btn-sm btn-default"><i class="fa fa-pencil"></i> write a comment</a>
         </div>
       </div>
 @if($comment_count>0)
@@ -39,7 +39,7 @@
 ?>
         <li class="list-group-item">
           <dl>
-            <dt><a href="{{ url("/app/comment?id={$app->getId()}#comment-{$c->getNumber()}") }}?>">{{ $c->number }}</a></dt>
+            <dt><a href="{{ url("/app/comment?id={$app->id}#comment-{$c->number}") }}?>">{{ $c->number }}</a></dt>
             <dd>{{ htmlspecialchars($c->message) }}</dd>
           </dl>
           <div class="text-right">
@@ -56,27 +56,27 @@
 @endforeach
       </ul>
       <div class="text-right">
-        <a href="{{ url("/app/comment?id={$app->getId()}#comments") }}">read more...</a>
+        <a href="{{ url("/app/comment?id={$app->id}#comments") }}">read more...</a>
       </div>
 @endif
     </div>
     <ul id="pf-nav-tabs" class="nav nav-tabs">
       <li {{ $pf==='android'? 'class="active"':'' }} id="android">
-        <a href="{{ "?id={$app->getId()}&pf=android" }}">Android</a>
+        <a href="{{ "?id={$app->id}&pf=android" }}">Android</a>
       </li>
       <li {{ $pf==='ios'? 'class="active"':'' }} id="ios">
-        <a href="{{ "?id={$app->getId()}&pf=ios" }}">iOS</a>
+        <a href="{{ "?id={$app->id}&pf=ios" }}">iOS</a>
       </li>
       <li {{ $pf==='all'? 'class="active"':'' }} id="all">
-        <a href="{{ "?id={$app->getId()}&pf=all" }}">All</a>
+        <a href="{{ "?id={$app->id}&pf=all" }}">All</a>
       </li>
     </ul>
 
     <div id="tag-filter">
       <a id="tag-filter-toggle" class="pull-right badge"><i class="fa fa-angle-double-{{ $filter_open?'up':'down' }}"></i></a>
           <div id="tag-filter-body" style="display: {{ ($filter_open)? 'block': 'none' }}">
-@foreach($app->getTags() as $tag)
-        <button id="{{ $tag->id }}" class="btn btn-default {{ in_array($tag->getId(), $active_tags) ? 'on active' : ''  }}" data-toggle="button">
+@foreach($app->tags as $tag)
+        <button id="{{ $tag->id }}" class="btn btn-default {{ in_array($tag->id, $active_tags) ? 'on active' : ''  }}" data-toggle="button">
         {{ htmlspecialchars($tag->name) }}
         </button>
 @endforeach
@@ -96,50 +96,50 @@
 @if($pkg->description)
       <p class="text-muted description">{{ $pkg->description }}</p>
 @endif
-              <span class="info hidden-xs hidden-sm">{{ $pkg->file_size?round($pkg->file_size/1024/1024,1):'--' }} MB, <?=$pkg->getCreated('Y-m-d H:i')?></span>
+              <span class="info hidden-xs hidden-sm">{{ $pkg->file_size?round($pkg->file_size/1024/1024,1):'--' }} MB, {{ date('Y-m-d H:i', $pkg->created_at) }}</span>
             </div>
             <div class="col-xs-12 col-md-5">
 @if($pkg->is_file_size_warned)
               <span class="label label-danger">Over {{ $pkg->file_size_limit() }} MB</span>
 @endif
-@foreach($pkg->getTags() as $tag)
-              <span class="label label-default" data="{{ htmlspecialchars($tag->getName()) }}">{{ htmlspecialchars($tag->getName()) }}</span>
+@foreach($pkg->tags as $tag)
+              <span class="label label-default" data="{{ htmlspecialchars($tag->name) }}">{{ htmlspecialchars($tag->name) }}</span>
 @endforeach
             </div>
           </div>
-          <span class="info visible-xs visible-sm"><?=$pkg->getFileSize()?round($pkg->getFileSize()/1024/1024,1):'--'?> MB</span>
-          <span class="info visible-xs visible-sm"><?=$pkg->getCreated('Y-m-d H:i')?></span>
+      <span class="info visible-xs visible-sm">{{ $pkg->file_size?round($pkg->file_size/1024/1024,1):'--' }} MB</span>
+          <span class="info visible-xs visible-sm">{{ date('Y-m-d H:i', $pkg->created_at) }}</span>
         </td>
         <td class="text-center">
-<?php if($login_user->getPackageInstalledDate($pkg)): ?>
-          <a class="btn btn-success install-link col-xs-12" href="<?=$pkg->getInstallUrl()?>"><i class="fa fa-check"></i> Installed</a>
-<?php else: ?>
-          <a class="btn btn-primary install-link col-xs-12" href="<?=$pkg->getInstallUrl()?>"><i class="fa fa-download"></i> Install</a>
-<?php endif ?>
+@if($app->latest_user_install)
+          <a class="btn btn-success install-link col-xs-12" href="{{ url('/package/install',['id'=>$pkg->id]) }}"><i class="fa fa-check"></i> Installed</a>
+@else
+          <a class="btn btn-primary install-link col-xs-12" href="{{ url('/package/install',['id'=>$pkg->id]) }}"><i class="fa fa-download"></i> Install</a>
+@endif
         </td>
       </tr>
-<?php endforeach ?>
+@endforeach
     </table>
 
     <ul class="pager">
-<?php if($current_page==1): ?>
+@if($current_page==1)
       <li class="previous disabled"><span>Previous</span></li>
-<?php else: ?>
-      <li class="previous"><a href="<?=mfwHttp::composeURL(mfwRequest::url(),array('page'=>$current_page-1))?>">Previous</a></li>
-<?php endif ?>
+@else
+      <li class="previous"><a href="{{ $prev_page_url }}">Previous</a></li>
+@endif
 
-<?php if($has_next_page):?>
-      <li class="next"><a href="<?=mfwHttp::composeURL(mfwRequest::url(),array('page'=>$current_page+1))?>">Next</a></li>
-<?php else: ?>
+@if($next_page_url)
+      <li class="next"><a href="{{ $next_page_url }}">Next</a></li>
+@else
       <li class="next disabled"><span>Next</span></li>
-<?php endif ?>
+@endif
     </ul>
 
   </div>
 </div>
 
 <div class="visible-xs">
-  <?=block('app_infopanel')?>
+  @include('pages/partials/app_infopanel')
 </div>
 
 <script type="text/javascript">
@@ -186,7 +186,7 @@ function compose_url() {
   if ($('i.fa-angle-double-up').length>0) {
     of = '&filter_open=1';
   }
-  return "<?="id={$app->getId()}&pf="?>" + pf + get_url_param_tabs() + of;
+  return "<?="id={$app->id}&pf="?>" + pf + get_url_param_tabs() + of;
 }
 
 // filter by tag
