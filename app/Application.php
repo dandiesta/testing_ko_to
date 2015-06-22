@@ -1,9 +1,12 @@
-<?php namespace App;
+<?php
+namespace App;
 
+# general
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
+# models
 use App\Comment;
 use App\UserPass;
 
@@ -120,4 +123,22 @@ class Application extends Model {
             ->get();
     }
 
+    public static function getAppDetails($app_id)
+    {
+        $app = DB::table('application')
+            ->where('id', $app_id)
+            ->first();
+
+        return $app;
+    }
+
+    public static function getAppPackages($app_id)
+    {
+        $app = DB::table('package')
+            ->where('app_id', $app_id)
+            ->get();
+
+        return $app;
+    }
+    
 }

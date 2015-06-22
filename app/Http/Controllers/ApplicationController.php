@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-# general classes
+# general
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
@@ -14,7 +14,6 @@ use App\ApplicationOwner;
 use App\UserPass;
 use App\Application;
 use App\Comment;
-
 
 class ApplicationController extends Controller
 {
