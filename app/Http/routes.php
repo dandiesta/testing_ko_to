@@ -16,6 +16,8 @@ $router->group(['middleware' => 'auth'], function() {
     Route::get('/package', ['as' => 'package', 'uses' => 'PackageController@index' ]);
     Route::get('/package/edit', ['as' => 'edit_package', 'uses' => 'PackageController@edit' ]);
 
+    Route::get('/doc/{page}', ['as' => 'docs', 'uses' => 'ApplicationController@documentation']);
+
     Route::get('/logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
 
 });
