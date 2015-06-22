@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+# models
 use App\ApplicationOwner;
 use App\UserPass;
 use App\Application;

@@ -12,10 +12,10 @@ $router->group(['middleware' => 'auth'], function() {
     Route::get('/top_apps', ['as' => 'top_apps', 'uses' => 'ApplicationController@top_apps']);
     // Packages
     Route::get('/package', ['as' => 'package', 'uses' => 'ApplicationController@packages' ]); //dapat may id to
+    Route::get('/package/edit', ['as' => 'edit_package', 'uses' => 'PackageController@edit' ]);
 
     Route::get('/logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
 });
-
 
 Route::controllers([
     'auth' => 'Auth\AuthController',
