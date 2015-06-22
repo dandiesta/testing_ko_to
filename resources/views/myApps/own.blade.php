@@ -6,6 +6,7 @@
 </div>
 
 <div>
+<?php $counter = 0; ?>
 @foreach($own_apps as $app)
 <div class="media app-list-item col-md-6">
   <p class="pull-left">
@@ -22,7 +23,7 @@
     </h3>
     <p>
       {{ ($app->upload_time)?'last uploaded':'created' }}: {{ date('Y-m-d H:i',strtotime(($app->upload_time)?$app->upload_time:$app->created_at)) }}
-<?php if($app->app_install_date && $upload_time > $app->app_install_date): ?>
+<?php if($app->app_install_date && $app->upload_time > $app->app_install_date): ?>
       <span class="label label-success">UPDATE</span>
 <?php elseif(strtotime($app->upload_time)>strtotime('yesterday')): ?>
       <span class="label label-primary">NEW</span>
@@ -30,7 +31,10 @@
     </p>
   </div>
 </div>
-
+<?php if((++$counter)%2===0): ?>
+</div>
+<div class="row">
+<?php endif ?>
 @endforeach
 </div>
 
