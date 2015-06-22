@@ -26,9 +26,9 @@ class AuthController extends Controller
         $input = Request::all();
 
         if (Auth::attempt(['mail' => $input['email'], 'password' => $input['password']])) {
-            return view('pages.login');
+            return redirect()->route('top_apps');
         }
 
-        dd('Why', $input);
+        return redirect()->route('login');
     }
 }

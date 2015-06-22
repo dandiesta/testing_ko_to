@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\ApplicationOwner;
 use App\UserPass;
 use App\Application;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Input;
 
 
 class ApplicationController extends Controller
@@ -14,9 +18,20 @@ class ApplicationController extends Controller
         return view('pages.packages.index');
     }
 
-    public function index()
+    public function top_apps()
     {
-        return view('pages.app_index');
+        $applications = Application::getTopApps(Auth::user()->mail, 20);
+        $paginator = new LengthAwarePaginator(
+            $applications->forPage(Input::get('page', 1), 20),
+            count(Application::getAllApps()),
+            20,
+            Paginator::resolveCurrentPage(),
+            ['path' => Paginator::resolveCurrentPath()]
+        );
+
+        $data['applications'] = $paginator;
+
+        return view('pages.app_index', $data);
     }
 
     public function my_apps()

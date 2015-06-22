@@ -2,7 +2,10 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
+use App\Comment;
+use App\UserPass;
 
 class Application extends Model {
 
@@ -29,4 +32,35 @@ class Application extends Model {
         return $applications;
     }
 
+    public static function getAllApps()
+    {
+        return DB::table('application')->get();
+    }
+
+    public static function getTopApps($email, $limit)
+    {
+        $applications = DB::table('application')
+            ->orderBy('created_at', 'DESC')
+            ->take($limit)
+            ->get();
+
+        foreach($applications as $app)
+        {
+            $app->comment_count = Comment::getCountByApplication($app->id);
+            $app->user_count = UserPass::getCountUsersByApp($app->id);
+            $app->latest_user_install = self::getLatestUserInstallDate($email, $app->id);
+        }
+
+        return new Collection($applications);
+    }
+
+    public static function getLatestUserInstallDate($user_mail, $app_id)
+    {
+        $app = DB::table('app_install_user')
+            ->where('mail', $user_mail)
+            ->where('app_id', $app_id)
+            ->first();
+
+        return ($app) ? $app->last_installed : null;
+    }
 }
