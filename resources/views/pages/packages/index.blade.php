@@ -8,13 +8,13 @@
         </a>
     </p>
     <div class="media-body">
-        <h2 class="media-hedding"><a href="">Title goes here{{-- htmlspecialchars($app->getTitle()) --}}</a></h2> {{-- url("/app?id={$app->getId()}") --}}
+        <h2 class="media-hedding"><a href="">TITLE GOES HERE{{-- htmlspecialchars($app->getTitle()) --}}</a></h2> {{-- url("/app?id={$app->getId()}") --}}
     </div>
 </div>
 
 <div class="row">
     <div class="col-sm-4 col-md-3 hidden-xs">
-        {{-- block('pkg_infopanel') --}}asdf
+        @include('pages.partials.qr_sidebar')
     </div>
 
     <div class="col-xs-12 col-sm-8 col-md-9">
@@ -22,8 +22,14 @@
         <div class="row">
             <div class="col-xs-7">
                 <h3>
-                    <a href=""> {{-- url("/package?id={$package->getId()}") --}}
-                        {{-- block('platform_icon') --}}asf
+                    <a href="">
+                        @if ($market == 'ios')
+                            <span><i class="fa fa-apple"></i> Ios</span>
+                        @else
+                            <i class="fa fa-android"></i> Android
+                        @endif
+                        {{-- url("/package?id={$package->getId()}") --}}
+                        {{-- block('platform_icon') --}}{{--asf--}}
                         {{-- htmlspecialchars($package->getTitle()) --}}
                     </a>
                 </h3>
@@ -60,24 +66,24 @@
 
         <dl class="dl-horizontal">
             <dt>Platform</dt>
-            <dd>{{-- block('platform_icon',array('with_name'=>true)) --}} ios (with image dapat to)</dd>
+            <dd>{{-- block('platform_icon',array('with_name'=>true)) --}} <i class="fa fa-apple"></i> ios (with image dapat to)</dd>
             <dt>Original name</dt>
             <dd>{{-- $package->getOriginalFileName()?:'--------.'.pathinfo($package->getBaseFileName(),PATHINFO_EXTENSION) --}}asdf</dd>
             <dt>File size</dt>
             <dd>{{-- $package->getFileSize()?number_format($package->getFileSize()):'-' --}}110,000,000 bytes</dd>
             <dt>Install user</dt>
             {{-- if($app->isOwner($login_user)): --}}
-                <dd>
-                    <div class="dropdown">
-                        <a class="dropdown-toggle" id="install-user-count" data-toggle="dropdown">
-                        </a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="install-user-count">
+                {{--<dd>--}}
+                    {{--<div class="dropdown">--}}
+                        {{--<a class="dropdown-toggle" id="install-user-count" data-toggle="dropdown">--}}
+                        {{--</a>--}}
+                        {{--<ul class="dropdown-menu" role="menu" aria-labelledby="install-user-count">--}}
                              {{--foreach($package->getInstallUsers() as $mail):--}}
-                                <li role="presentation"><a role="menuitem" tabindex="-1"> {{-- $mail --}} </a></li>
+                                {{--<li role="presentation"><a role="menuitem" tabindex="-1"> --}}{{-- $mail --}}{{-- </a></li>--}}
                              {{--endforeach--}}
-                        </ul>
-                    </div>
-                </dd>
+                        {{--</ul>--}}
+                    {{--</div>--}}
+                {{--</dd>--}}
             {{-- else: --}}
                 <dd>{{-- $package->getInstallCount() --}}1234</dd>
             {{-- endif --}}
@@ -89,17 +95,17 @@
             {{-- endforeach --}}
         </dl>
 
-        <div class="col-xs-12 col-sm-9">
-            <p class="text-center">
-                <a class="btn btn-default" href=""><i class="fa fa-bolt"></i> Create Install Token</a> {{-- url("/package/create_token?id={$package->getId()}") --}}
-            </p>
-        </div>
+        {{--<div class="col-xs-12 col-sm-9">--}}
+            {{--<p class="text-center">--}}
+                {{--<a class="btn btn-default" href=""><i class="fa fa-bolt"></i> Create Install Token</a> --}}{{-- url("/package/create_token?id={$package->getId()}") --}}
+            {{--</p>--}}
+        {{--</div>--}}
 
     </div>
 </div>
 
 <div class="visible-xs">
-    {{-- block('pkg_infopanel') --}}
+    @include('pages.partials.qr_sidebar')
 </div>
 
 @stop

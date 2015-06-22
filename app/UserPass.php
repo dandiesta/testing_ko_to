@@ -6,6 +6,8 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
+use Illuminate\Support\Facades\DB;
+
 class UserPass extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
 	use Authenticatable, CanResetPassword;
@@ -35,4 +37,12 @@ class UserPass extends Model implements AuthenticatableContract, CanResetPasswor
         return $this->passhash;
     }
 
+    public static function getCountUsersByApp($app_id)
+    {
+        $count = DB::table('app_install_user')
+            ->where('app_id', $app_id)
+            ->count();
+
+        return $count;
+    }
 }

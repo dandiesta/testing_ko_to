@@ -12,7 +12,7 @@
 
     <div class="row">
         <?php $counter = 0; ?>
-        {{--@foreach($applications as $app)--}}
+        @foreach($applications as $app)
         <div class="media app-list-item col-md-6">
             <p class="pull-left">
                 {{--Link to App Page--}}
@@ -24,30 +24,25 @@
             <div class="media-body">
                 <h3 class="media-hedding">
                     {{--App Title; Also a link--}}
-                    <a href="#">The Derpening</a>
+                    <a href="#">{{ $app->title }}</a>
                     {{--Comments Count--}}
-                    {{--@if(isset($comments[$app->getId()]) && $comments[$app->getId()]>0)--}}
+                    @if(!empty($app->comment_count) && $app->comment_count > 0)
                     <div class="balloon">
-                        <div title="App_Id comments">420</div>
+                        <div title="App_Id comments">{{ $app->comment_count }}</div>
                     </div>
-                    {{--@endif--}}
+                    @endif
                     {{--No of Installs--}}
-                    <small title="Installed by theCountForSomeReason users" class="badge">1337</small>
+                    <small title="Installed by theCountForSomeReason users" class="badge">{{ $app->user_count }}</small>
                 </h3>
                 <p>
-                    {{--{{--}}
-                    {{--Labels for dates--}}
-                    {{--$upload_time = $app->getLastUpload();--}}
-                    {{--$update_time = $upload_time?:$app->getCreated();--}}
-                    {{--}}--}}
-                    {{--{{ ($upload_time)?'last uploaded':'created' }}: {{ date('Y-m-d H:i',strtotime($update_time)) }}--}}
+                    {{ (strtotime($app->updated_at) > strtotime($app->created_at)) ? "Updated: " . date('Y-m-d H:i', strtotime($app->updated_at)) : "Created: " . date('Y-m-d H:i', strtotime($app->created_at))}}
 
                     {{--Status Labels--}}
-                    {{--@if($login_user->getAppInstallDate($app) && $upload_time>$login_user->getAppInstallDate($app))--}}
+                    @if(!empty($app->latest_user_install) && (strtotime($app->updated_at) > strtotime($app->latest_user_install)))
                     <span class="label label-success">UPDATE</span>
-                    {{--@elseif(strtotime($update_time)>strtotime('yesterday'))--}}
+                    @elseif(strtotime($app->updated_at)>strtotime('yesterday'))
                     <span class="label label-primary">NEW</span>
-                    {{--@endif--}}
+                    @endif
                 </p>
             </div>
         </div>
@@ -55,7 +50,7 @@
     </div>
     <div class="row">
         @endif
-        {{--@endforeach--}}
+        @endforeach
     </div>
 
     {{--New Application Button--}}
@@ -64,9 +59,9 @@
     </div>
 
     {{--Pagination thingy--}}
-    {{--<div class="text-center">--}}
-        {{--{{('paging',array('urlbase'=>url('/')))}}--}}
-    {{--</div>--}}
+    <div class="text-center">
+        {!! $applications->render() !!}
+    </div>
 
     {{--<script type="text/javascript">--}}
 
