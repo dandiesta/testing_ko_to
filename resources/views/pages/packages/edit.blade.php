@@ -56,8 +56,8 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">Tags</label>
                     <div class="col-md-10">
-                        @foreach($all_tags as $tag)
-                        <?php $checked = array_key_exists($tag->id, $package_tags) ? 'checked' : ''?>
+                        @foreach($app->all_tags as $tag)
+                        <?php $checked = array_key_exists($tag->id, $app->package_tags) ? 'checked' : ''?>
                         <input type="checkbox" class="hidden" name="tags[]" value="{{ $tag->id }}" {{ $checked }}>
                         <button class="btn btn-default tags" data-toggle="button">{{ $tag->name }}</button>
                         @endforeach

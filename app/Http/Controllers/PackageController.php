@@ -43,11 +43,15 @@ class PackageController extends Controller
     public function edit(Helper $helper)
     {
         $id = Request::input('id');
-        $data['app'] = Package::selectByPackageId($id);
-        $data['all_tags'] = Tag::getAll($data['app']->app_id);
-        $data['package_tags'] = $helper->getArrayable(Tag::selectByPackageId($id));
+        $app = Package::selectByPackageId($id);
+        $app->all_tags = Tag::getAll($app->app_id);
+        $app->package_tags = $helper->getArrayable(Tag::selectByPackageId($id));
 
-        $data['current_page'] = Route::currentRouteName();
+        $data = [
+            'app' => $app,
+            'current_page' => Route::currentRouteName()
+        ];
+
         return view('pages.packages.edit', $data);
     }
 

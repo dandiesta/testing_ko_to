@@ -61,7 +61,7 @@
 @endif
     </div>
     <ul id="pf-nav-tabs" class="nav nav-tabs">
-      <li {!! $pf=='android'? 'class="active"':'' !!} id="android">
+      <li {!! $pf='android' ? 'class="active"' : '' !!} id="android">
         <a href="{{ "?id={$app->id}&pf=android" }}">Android</a>
       </li>
       <li {!! $pf=='ios'? 'class="active"':'' !!} id="ios">
