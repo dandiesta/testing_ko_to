@@ -149,6 +149,7 @@ class Application extends Model {
     {
         $apps = DB::table('package')
             ->where('app_id', $app_id)
+            ->orderBy('created_at', 'desc')
             ->get();
         $packages = [];
         foreach ($apps as $app) {

@@ -16,6 +16,7 @@ use App\Tag;
 use App\User;
 use App\UserPass;
 use App\Application;
+use App\InstallLog;
 
 class PackageController extends Controller
 {
@@ -138,6 +139,16 @@ class PackageController extends Controller
             $plist_url = route('install_plist', $params);
             $url = 'itms-services://?action=download-manifest&url='.$plist_url;
         }
+
+        $data = [
+            'app_id' => $package->app_id,
+            'package_id' => $package->id,
+            'mail' => Auth::user()->mail,
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+            'installed' => date('Y-m-d H:i:s'),
+        ];
+        $log = new InstallLog($data);
+        $log->save();
 
         return redirect()->to($url);
     }
