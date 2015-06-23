@@ -41,6 +41,13 @@ class Package extends Model
         }
         return $this->tags;
     }
+    
+    public static function deleteById($id)
+    {
+        DB::table('package')
+            ->where('id', $id)
+            ->delete();
+    }
 
     public static function getCommentedByIds($ids)
     {

@@ -165,4 +165,26 @@ class ApplicationController extends Controller
         return view('app.preferences', []);
     }
 
+    public function documentation($page = 'api')
+    {
+        switch ($page)
+        {
+            case 'api_upload':
+                return view('docs.upload');
+                break;
+            case 'api_package_list':
+                return view('docs.package_list');
+                break;
+            case 'api_delete':
+                return view('docs.delete');
+                break;
+            case 'api_create_token':
+                return view('docs.create_token');
+                break;
+            default:
+                return view('docs.api');
+                break;
+        }
+    }
+
 }
