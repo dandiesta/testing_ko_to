@@ -1,6 +1,6 @@
 <?php
 
-Route::post('/login', ['as' => 'login', 'uses' => 'AuthController@login']);
+Route::get('/login', ['as' => 'login', 'uses' => 'AuthController@login']);
 Route::post('/authenticate', ['as' => 'authenticate', 'uses' => 'AuthController@authenticate']);
 
 $router->group(['middleware' => 'auth'], function() {
