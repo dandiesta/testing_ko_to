@@ -55,7 +55,7 @@
              @endif
 
              @foreach($tags as $tag)
-                <span class="label label-default">{{ $tag->name }}</span>
+                <span class="label label-default">{{ $tag }}</span>
              @endforeach
         </p>
 

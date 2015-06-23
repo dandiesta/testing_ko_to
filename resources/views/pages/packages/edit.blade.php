@@ -3,12 +3,12 @@
 @section('content')
     <div class="media">
         <p class="pull-left">
-            <a href=""> {{-- url("/app?id={$app->getId()}")--}}
-                <img class="app-icon media-object img-rounded" src="{{ asset('apple-touch-icon.png') }}">{{-- $app->getIconUrl() --}}
+            <a href="{{ route('app', ['id' => $app->app_id]) }}"> {{-- url("/app?id={$app->getId()}")--}}
+                <img class="app-icon media-object img-rounded" src="{{ env('AWS_URL') .  $app->icon_key }}">{{-- $app->getIconUrl() --}}
             </a>
         </p>
         <div class="media-body">
-            <h2 class="media-hedding"><a href="">TITLE GOES HERE{{-- htmlspecialchars($app->getTitle()) --}}</a></h2>
+            <h2 class="media-hedding"><a href="{{ route('app', ['id' => $app->app_id]) }}">{{ $app->app_title }}</a></h2>
         </div>
     </div>
 
@@ -20,17 +20,18 @@
         <div class="col-xs-12 col-sm-8 col-md-9">
 
             <h3>
-                <a href="{{ route('package', ['id' => $id]) }}">
-                    @if ($market == 'ios')
-                        <span><i class="fa fa-apple"></i> Ios</span>
+                <a href="{{ route('package', ['id' => $app->id]) }}">
+                    @if ($app->platform == 'ios')
+                        <i class="fa fa-apple"></i>
                     @else
-                        <i class="fa fa-android"></i> Android
+                        <i class="fa fa-android"></i>
                     @endif
+                    {{ $app->title }}
                     {{--htmlspecialchars($package->getTitle())--}}
                 </a>
             </h3>
 
-            {!! Form::open(['url' => '', 'class' => 'form-horizontal']) !!}
+            {!! Form::open(['url' => route('save_package'), 'class' => 'form-horizontal']) !!}
             {{--<form class="form-horizontal" method="post" action=""> --}}{{-- <url("/package/edit_commit?id={$package->getId()}") --}}
 
                 <div class="form-group">
@@ -39,28 +40,27 @@
                         <div id="alert-notitle" class="alert alert-danger hidden">
                             タイトルが入力されていません
                         </div>
-                        <input type="text" class="form-control" name="title" id="title" value="title here">
+
+                        <input type="hidden" name="id" value="{{ $app->id }}">
+                        <input type="text" class="form-control" name="title" id="title" value="{{ $app->title }}">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="description" class="control-label col-md-2">Description</label>
                     <div class="col-md-10">
-                        <textarea class="form-control" row="3" id="description" name="description">DESCRIPTION HERE</textarea>
+                        <textarea class="form-control" row="3" id="description" name="description">{{ $app->description }}</textarea>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-md-2">Tags</label>
                     <div class="col-md-10">
-
-                        {{--$ptags = $package->getTags();--}}
-                        {{--foreach($app->getTags() as $tag):--}}
-                        {{--$checked = isset($ptags[$tag->getId()])? ' checked="checked"': '';--}}
-
-                        <input type="checkbox" class="hidden" name="tags[]" value="TAGS HERE">
-                        <button class="btn btn-default tags" data-toggle="button">TAG GOES HERE{{-- $tag->getName() --}}</button>
-                        {{--endforeach--}}
+                        @foreach($all_tags as $tag)
+                        <?php $checked = array_key_exists($tag->id, $package_tags) ? 'checked' : ''?>
+                        <input type="checkbox" class="hidden" name="tags[]" value="{{ $tag->id }}" {{ $checked }}>
+                        <button class="btn btn-default tags" data-toggle="button">{{ $tag->name }}</button>
+                        @endforeach
 
                         <div id="tag-template" class="hidden">
                             <input type="checkbox" class="hidden" name="tags[]" value="">
@@ -82,7 +82,7 @@
                 <div class="form-group">
                     <div class="col-md-10 col-md-offset-2">
                         <button class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
-                        <a class="btn btn-default" href="{{ route('package', ['id' => $id]) }}"><i class="fa fa-times"></i> Cancel</a>
+                        <a class="btn btn-default" href="{{ route('package', ['id' => $app->id]) }}"><i class="fa fa-times"></i> Cancel</a>
                     </div>
                 </div>
 

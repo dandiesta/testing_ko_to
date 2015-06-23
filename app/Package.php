@@ -10,7 +10,9 @@ class Package extends Model
 {
     protected $table = 'package';
 
+    protected $fillable = ['title', 'description'];
     protected $tags = null;
+    public $timestamps = false;
 
     public static function selectByPackageId($id)
     {
@@ -34,11 +36,25 @@ class Package extends Model
         return $size;
     }
 
-    public function getTags()
+    public static function getDetails($id)
     {
-        if($this->tags===null){
-            $this->tags = TagDb::selectByPackageId($this->getId());
-        }
-        return $this->tags;
+        $details = DB::table('package')
+            ->where('id', $id)
+            ->first();
+        return $details;
+    }
+
+    public static function addNewTag($tag_id, $package_id)
+    {
+        DB::table('package_tag')
+            ->insert([
+                'package_id' => $package_id,
+                'tag_id' => $tag_id
+            ]);
+    }
+
+    public static function removeAllTags($package_id)
+    {
+        DB::table('package_tag')->where('package_id', $package_id)->delete();
     }
 }

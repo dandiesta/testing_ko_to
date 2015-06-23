@@ -9,6 +9,8 @@ class Tag extends Model
 {
     protected $table = 'tag';
 
+    protected $fillable = ['app_id', 'name'];
+
     public static function selectByPackageId($id)
     {
         $tags = DB::table('package_tag as p')
@@ -19,4 +21,13 @@ class Tag extends Model
 
         return $tags;
     }
+
+    public static function getAll($app_id)
+    {
+        $tags = Tag::where('app_id', $app_id)->get();
+
+        return $tags;
+    }
+
+
 }
