@@ -21,6 +21,8 @@ $router->group(['middleware' => 'auth'], function() {
     Route::get('/package/edit', ['as' => 'edit_package', 'uses' => 'PackageController@edit' ]);
     Route::get('/package/delete_confirm', ['as' => 'delete_confirm', 'uses' => 'PackageController@delete_confirm']);
     Route::post('/package/delete', ['as' => 'delete_package', 'uses' => 'PackageController@delete']);
+    Route::get('/package/install', ['as' => 'install_package', 'uses' => 'PackageController@install']);
+    Route::get('/package/install_plist', ['as' => 'install_plist', 'uses' => 'PackageController@install_plist']);
 
     Route::get('/doc/{page}', ['as' => 'docs', 'uses' => 'ApplicationController@documentation']);
 

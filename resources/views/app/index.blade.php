@@ -61,13 +61,13 @@
 @endif
     </div>
     <ul id="pf-nav-tabs" class="nav nav-tabs">
-      <li {{ $pf==='android'? 'class="active"':'' }} id="android">
+      <li {!! $pf=='android'? 'class="active"':'' !!} id="android">
         <a href="{{ "?id={$app->id}&pf=android" }}">Android</a>
       </li>
-      <li {{ $pf==='ios'? 'class="active"':'' }} id="ios">
+      <li {!! $pf=='ios'? 'class="active"':'' !!} id="ios">
         <a href="{{ "?id={$app->id}&pf=ios" }}">iOS</a>
       </li>
-      <li {{ $pf==='all'? 'class="active"':'' }} id="all">
+      <li {!! $pf=='all'? 'class="active"':'' !!} id="all">
         <a href="{{ "?id={$app->id}&pf=all" }}">All</a>
       </li>
     </ul>
@@ -111,10 +111,10 @@
           <span class="info visible-xs visible-sm">{{ date('Y-m-d H:i', strtotime($pkg->created_at)) }}</span>
         </td>
         <td class="text-center">
-@if($app->latest_user_install)
-          <a class="btn btn-success install-link col-xs-12" href="{{ url('/package/install',['id'=>$pkg->id]) }}"><i class="fa fa-check"></i> Installed</a>
+@if($pkg->is_installed)
+          <a class="btn btn-success install-link col-xs-12" href="{{ route('install_package', ['id'=>$pkg->id]) }}"><i class="fa fa-check"></i> Installed</a>
 @else
-          <a class="btn btn-primary install-link col-xs-12" href="{{ url('/package/install',['id'=>$pkg->id]) }}"><i class="fa fa-download"></i> Install</a>
+          <a class="btn btn-primary install-link col-xs-12" href="{{ route('install_package', ['id'=>$pkg->id]) }}"><i class="fa fa-download"></i> Install</a>
 @endif
         </td>
       </tr>

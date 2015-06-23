@@ -123,6 +123,19 @@ class Application extends Model {
             ->get();
     }
 
+    public static function getActiveTagsByAppId($app_id)
+    {
+        $tags = DB::table('tag')
+            ->select('id')
+            ->where('app_id', $app_id)
+            ->get();
+        $ids = [];
+        foreach ($tags as $tag) {
+            $ids[] = $tag->id;
+        }
+        return $ids;
+    }
+
     public static function getAppDetails($app_id)
     {
         $app = DB::table('application')
