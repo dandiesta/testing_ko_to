@@ -15,7 +15,7 @@
     <div class="list-group-item">
         <div class="text-center">
             <p>Scan this to get the link</p>
-            <img src="https://chart.googleapis.com/chart?chs=150&cht=qr&chl={{ urlencode(route('package')) }}">
+                <img src="https://chart.googleapis.com/chart?chs=150&cht=qr&chl={{ route('install_package', ['id'=>$app->id]) }}">
         </div>
     </div>
 </div>
