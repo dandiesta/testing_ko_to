@@ -6,8 +6,8 @@
             <li @if ($current_page == 'edit_package') class="active" @endif>
                 <a href="{{ route('edit_package', ['id' => $app->id]) }}"><i class="fa fa-pencil"></i> Edit</a>
             </li>
-            <li @if ($current_page == 'delete_package') class="active" @endif>
-                <a href=""><i class="fa fa-trash-o"></i> Delete</a>
+            <li @if ($current_page == 'delete_confirm') class="active" @endif>
+                <a href="{{ route('delete_confirm', ['id' => $app->id]) }}"><i class="fa fa-trash-o"></i> Delete</a>
             </li>
         </ul>
     </div>

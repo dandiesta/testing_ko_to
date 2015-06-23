@@ -62,10 +62,10 @@
         <dl class="dl-horizontal">
             <dt>Platform</dt>
             <dd>
-                @if ($app->platform == 'iOS')
+                @if ($app->platform == 'ios')
                     <i class="fa fa-apple"></i> iOS
                 @elseif($app->platform == 'android')
-                    <i class="fa fa-apple"></i> iOS
+                    <i class="fa fa-apple"></i> Android
                 @endif
             </dd>
             <dt>Original name</dt>

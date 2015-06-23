@@ -1,79 +1,79 @@
 <div class="list-group">
-<?php if($app->isOwner($login_user)): ?>
+@if($app->is_owner)
   <div class="list-group-item">
     <ul class="nav nav-pills nav-stacked">
-      <li<?=($action==='upload')?' class="active"':''?>>
-        <a href="<?=url("/app/upload?id={$app->getId()}")?>"><i class="fa fa-upload"></i> Upload</a>
+      <li {{ ($action==='upload')?' class="active"':'' }}>
+        <a href="{{ url("/app/upload?id={$app->id}") }}"><i class="fa fa-upload"></i> Upload</a>
       </li>
-      <li<?=($action==='preferences')?' class="active"':''?>>
-        <a href="<?=url("/app/preferences?id={$app->getId()}")?>"><i class="fa fa-wrench"></i> Preferences</a>
+      <li {{ ($action==='preferences')?' class="active"':'' }}>
+        <a href="{{ url("/app/preferences?id={$app->id}") }}"><i class="fa fa-wrench"></i> Preferences</a>
       </li>
     </ul>
   </div>
-<?php endif ?>
+@endif
   <div class="list-group-item">
     <dl>
-<?php if($app->getLastUpload()): ?>
+    @if($app->last_upload)
       <dt>last upload</dt>
-      <dd><?=$app->getLastUpload()?></dd>
-<?php endif ?>
-<?php if($app->getLastCommented()): ?>
+      <dd><?=$app->last_upload?></dd>
+@endif
+@if($app->last_commented)
       <dt>last comment</dt>
-      <dd><?=$app->getLastCommented()?></dd>
-<?php endif ?>
+      <dd><?=$app->last_commented?></dd>
+@endif
       <dt>created</dt>
-      <dd><?=$app->getCreated()?></dd>
+      <dd><?=$app->created_at?></dd>
       <dt>install user</dt>
-<?php if($app->isOwner($login_user)): ?>
+@if($app->is_owner)
       <dd>
         <div class="dropdown">
           <a class="dropdown-toggle" id="install-user-count" data-toggle="dropdown">
-            <?=$app->getInstallUserCount()?>
+            <?=$app->install_user_count?>
           </a>
           <ul class="dropdown-menu" role="menu" aria-labelledby="install-user-count">
-<?php foreach($app->getInstallUsers() as $u): ?>
-            <li role="presentation"><a role="menuitem" tabindex="-1"><?=$u->getMail()?></a></li>
-<?php endforeach ?>
+@foreach($app->install_user as $u)
+            <li role="presentation"><a role="menuitem" tabindex="-1"><?=$u->mail?></a></li>
+@endforeach
           </ul>
         </div>
       </dd>
-<?php else: ?>
-      <dd><?=$app->getInstallUserCount()?></dd>
-<?php endif ?>
-<?php if($app->getRepository()): ?>
+@else
+      <dd><?=$app->install_user_count?></dd>
+@endif
+@if($app->repository)
       <dt>repository</dt>
-<?php if(preg_match('|^https?://([^/]*)/(.*)$|',$app->getRepository(),$m)):?>
+@if(preg_match('|^https?://([^/]*)/(.*)$|',$app->repository,$m))
       <dd>
-        <a target="_blank" href="<?=htmlspecialchars($app->getRepository())?>" class="repository-link">
-<?php if($m[1]==='github.com'): ?>
+        <a target="_blank" href="<?=htmlspecialchars($app->repository)?>" class="repository-link">
+@if($m[1]==='github.com')
           <i class="fa fa-github"></i>
           <?=htmlspecialchars($m[2]);?>
-<?php elseif(strpos($m[1],'github')!==false): /* may be github enterprise */ ?>
+@elseif(strpos($m[1],'github')!==false)
           <i class="fa fa-github-square"></i>
           <?=htmlspecialchars($m[2]);?>
-<?php elseif(strpos($m[1],'bitbucket')!==false): ?>
+@elseif(strpos($m[1],'bitbucket')!==false)
           <i class="fa fa-bitbucket"></i>
           <?=htmlspecialchars($m[2]);?>
-<?php else: ?>
+@else
           <?=htmlspecialchars("{$m[1]}/{$m[2]}")?>
-<?php endif ?>
+@endif
 
         </a>
       </dd>
-<?php else: ?>
-      <dd><input type="text" class="form-control" readonly="readonly" value="<?=htmlspecialchars($app->getRepository())?>"></dd>
-<?php endif ?>
-<?php endif ?>
+@else
+      <dd><input type="text" class="form-control" readonly="readonly" value="<?=htmlspecialchars($app->repository)?>"></dd>
+@endif
+@endif
       <dt>owners</dt>
-<?php foreach($app->getOwners() as $owner):?>
-      <dd><a href="mailto:<?=$owner->getOwnerMail()?>"><?=$owner->getOwnerMail()?></a></dd>
-<?php endforeach ?>
+@foreach($app->owners as $owner)
+      <dd><a href="mailto:<?=$owner->owner_email?>"><?=$owner->owner_email?></a></dd>
+@endforeach
     </dl>
   </div>
   <div class="list-group-item">
     <div class="text-center">
       <p>link to this app</p>
-      <img src="https://chart.googleapis.com/chart?chs=150&cht=qr&chl=<?=urlencode(url("/app?id={$app->getId()}"))?>">
+      <img src="https://chart.googleapis.com/chart?chs=150&cht=qr&chl=<?=urlencode(url("/app?id={$app->id}"))?>">
     </div>
   </div>
 </div>

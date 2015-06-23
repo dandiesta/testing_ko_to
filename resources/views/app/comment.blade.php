@@ -1,86 +1,92 @@
+@extends('pages.main')
+
+@section('content')
+
 <div class="media">
   <p class="pull-left">
-    <a href="<?=url("/app?id={$app->getId()}")?>">
-      <img class="app-icon media-object img-rounded" src="<?=$app->getIconUrl()?>">
+    <a href="{{ "/app?id={$app->id}" }}">
+      <img class="app-icon media-object img-rounded" src="{{ env('AWS_URL') . $app->icon_key }}">
     </a>
   </p>
   <div class="media-body">
-    <h2 class="media-hedding"><a href="<?=url("/app?id={$app->getId()}")?>"><?=htmlspecialchars($app->getTitle())?></a></h2>
-    <p><?=nl2br(htmlspecialchars($app->getDescription()))?></p>
+    <h2 class="media-hedding"><a href="{{ "/app?id={$app->id}" }}">{{ htmlspecialchars($app->title) }}</a></h2>
+    <p>{{ nl2br(htmlspecialchars($app->description)) }}</p>
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm-4 col-md-3 hidden-xs">
-    <?=block('app_infopanel')?>
+    @include('pages/partials/app_infopanel')
   </div>
 
   <div class="col-xs-12 col-sm-8 col-md-9">
 
     <div id="comment-form">
-      <form class="form-horizontal" method="post" action="<?=url('/app/comment_post')?>">
-        <div id="alert-nomessage" class="alert alert-danger hidden">
-          コメントが入力されていません
-        </div>
-        <input type="hidden" name="id" value="<?=$app->getId()?>">
-        <label for="message" class="sr-only">Message</label>
+        {!! Form::open(array('url' => url('/app/post_comment'), 'class'=> 'form-horizontal')) !!}
+            <div id="alert-nomessage" class="alert alert-danger hidden">
+              コメントが入力されていません
+            </div>
+            {!! Form::hidden('id', $app->id) !!}
+
         <textarea name="message" class="form-control" rows="3"></textarea>
         <div class="controls text-right">
           <label for="package_id">Target package</label>
-<?php if($install_packages->count()>0): ?>
+@if(count($install_packages)>0)
           <select name="package_id" class="form-control">
-<?php foreach($install_packages as $pkg): ?>
-            <option value="<?=$pkg->getId()?>">
-              <?=block('platform_icon',array('package'=>$pkg,'with_name'=>true))?> -
-              <?=$pkg->getTitle()?></option>
-<?php endforeach ?>
+@foreach($install_packages as $pkg)
+            <option value="{{ $pkg->id }}">
+              @include('pages/partials/platform_icon')
+              -
+              {{ $pkg->title }}</option>
+@endforeach
           </select>
-<?php else: ?>
+@else
           <select name="package_id" class="form-control" disabled="disabled">
             <option value="0" selected="selected">No package installed</option>
           </select>
-<?php endif ?>
+@endif
           <button name="submit" class="btn btn-primary"><i class="fa fa-pencil"></i> Comment</button>
         </div>
-      </form>
+        {!! Form::close() !!}
     </div>
 
     <div id="comments">
-      <h3><?=$comment_count?> comments</h3>
+      <h3>{{ $comment_count }} comments</h3>
       <ul class="list-group">
+@foreach($top_comments as $c)
 <?php
-foreach($comments as $c):
-    $pkg = ($c->getPackageId())? $commented_package[$c->getPackageId()]: null;
-    $comment_page = floor(($comment_count-$c->getNumber())/$comments_in_page)+1;
+    $pkg = ($c->package_id)? $commented_package[$c->package_id]: null;
 ?>
-        <li class="list-group-item" id="comment-<?=$c->getNumber()?>">
+        <li class="list-group-item">
           <dl>
-            <dt><a href="<?=url("/app/comment?id={$app->getId()}&page=$comment_page#comment-{$c->getNumber()}")?>"><?=$c->getNumber()?></a></dt>
-            <dd><?=htmlspecialchars($c->getMessage())?></dd>
+            <dt><a href="{{ url("/app/comment?id={$app->id}#comment-{$c->number}") }}?>">{{ $c->number }}</a></dt>
+            <dd>{{ htmlspecialchars($c->message) }}</dd>
           </dl>
           <div class="text-right">
-<?php if($pkg): ?>
-            <a href="<?=url("/package?id={$pkg->getId()}")?>">
-              <?=block('platform_icon',array('package'=>$pkg))?> <?=htmlspecialchars($pkg->getTitle())?></a>
-<?php else: ?>
+@if($pkg)
+            <a href="{{ url("/package?id={$pkg->id}") }}">
+            @include('pages/partials/platform_icon')
+            {{ htmlspecialchars($pkg->title) }}</a>
+@else
             <span>No package installed</span>
-<?php endif ?>
-            (<?=$c->getCreated('Y-m-d H:i')?>)
+@endif
+            ({{ date('Y-m-d H:i', strtotime($c->created_at)) }})
           </div>
         </li>
-<?php endforeach ?>
+@endforeach
       </ul>
     </div>
 
     <div class="text-center">
-      <?=block('paging',array('urlbase'=>mfwRequest::url()))?>
+        {!! $top_comments->setPath('/app/comment')->appends(Input::query())->render() !!}
     </div>
+
 
   </div>
 </div>
 
 <div class="visible-xs">
-  <?=block('app_infopanel')?>
+  @include('pages/partials/app_infopanel')
 </div>
 
 <script type="text/javascript">
@@ -96,3 +102,4 @@ $('#comment-form form').submit(function(){
 
 
 </script>
+@endsection
