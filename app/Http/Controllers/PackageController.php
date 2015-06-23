@@ -33,4 +33,23 @@ class PackageController extends Controller
 
         return view('pages.packages.edit', $data);
     }
+
+    public function delete_confirm()
+    {
+        $id = Request::input('id');
+        $data['app'] = Package::selectByPackageId($id);
+        $data['tags'] = Tag::selectByPackageId($id);
+
+        $data['current_page'] = Route::currentRouteName();
+
+        return view('pages.packages.delete', $data);
+    }
+
+    public function delete()
+    {
+        $package_id = Request::input('package_id');
+        Package::deleteById($package_id);
+
+        return redirect()->route('app', ['id' => Request::input('app_id')]);
+    }
 }

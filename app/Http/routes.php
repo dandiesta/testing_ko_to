@@ -1,6 +1,6 @@
 <?php
 
-Route::get('/login', ['as' => 'login', 'uses' => 'AuthController@login']);
+Route::post('/login', ['as' => 'login', 'uses' => 'AuthController@login']);
 Route::post('/authenticate', ['as' => 'authenticate', 'uses' => 'AuthController@authenticate']);
 
 $router->group(['middleware' => 'auth'], function() {
@@ -15,6 +15,8 @@ $router->group(['middleware' => 'auth'], function() {
     // Packages
     Route::get('/package', ['as' => 'package', 'uses' => 'PackageController@index' ]);
     Route::get('/package/edit', ['as' => 'edit_package', 'uses' => 'PackageController@edit' ]);
+    Route::get('/package/delete_confirm', ['as' => 'delete_confirm', 'uses' => 'PackageController@delete_confirm']);
+    Route::post('/package/delete', ['as' => 'delete_package', 'uses' => 'PackageController@delete']);
 
     Route::get('/doc/{page}', ['as' => 'docs', 'uses' => 'ApplicationController@documentation']);
 
