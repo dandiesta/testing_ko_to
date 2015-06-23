@@ -5,8 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use Aws\S3\S3Client;
 use Illuminate\Support\Facades\Auth;
-
 
 class Package extends Model
 {
@@ -115,6 +115,16 @@ class Package extends Model
             $packages[] = self::getById($package->package_id);
         }
         return $packages;
+    }
+
+    public function getInstallUrlAttribute()
+    {
+        $client = S3Client::factory(array(
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+        ));
+        $url = $client->getObjectUrl(env('AWS_S3_BUCKET'),"package/{$this->app_id}/{$this->id}_{$this->file_name}",'+60 min');
+        return $url;
     }
 
     public static function isInstalled($id)

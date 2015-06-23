@@ -47,10 +47,12 @@ class ApplicationController extends Controller
         $app->install_user = Application::getInstallUserByAppId($app_id);
         $app->owners = Application::getOwnersByAppId($app_id);
         $app->tags = Application::getTagsByAppId($app_id);
+        $active_tags = Application::getActiveTagsByAppId($app_id);
 
         $packages = Application::getAppPackages($app_id);
         foreach ($packages as $package) {
             $package->tags = Package::getTagsByPackageId($package->id);
+            $package->is_installed = Package::isInstalled($package->id);
         }
         $next_page_url = count($packages) > 20 ? $next_page_url : null;
 
@@ -67,6 +69,7 @@ class ApplicationController extends Controller
             'next_page_url' => $next_page_url,
             'prev_page_url' => $prev_page_url,
             'is_file_size_warned' => $is_file_size_warned,
+            'active_tags' => $active_tags,
         ];
         return view('app.index', $data);
     }
