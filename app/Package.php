@@ -69,4 +69,24 @@ class Package extends Model
             ->where('package_id', $package_id)
             ->get();
     }
+
+    public static function getById($package_id)
+    {
+        return DB::table('package')
+            ->where('id', $package_id)
+            ->first();
+    }
+
+    public static function getInstalledByEmail($email)
+    {
+        $package_ids = DB::table('install_log')
+            ->where('mail', $email)
+            ->groupBy('package_id')
+            ->get();
+        $packages = [];
+        foreach ($package_ids as $package) {
+            $packages[] = self::getById($package->package_id);
+        }
+        return $packages;
+    }
 }

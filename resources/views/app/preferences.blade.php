@@ -1,7 +1,11 @@
+@extends('pages.main')
+
+@section('content')
+
 <div class="media">
   <p class="pull-left">
-    <a href="<?=url("/app?id={$app->getId()}")?>">
-	  <img class="app-icon media-object img-rounded" src="<?=$app->getIconUrl()?>">
+    <a href="{{ "/app?id={$app->id}" }}">
+      <img class="app-icon media-object img-rounded" src="{{ env('AWS_URL') . $app->icon_key }}">
     </a>
   </p>
   <div class="media-body">
@@ -310,3 +314,4 @@ $('#add-owner button').on('click',function(event){
 });
 
 </script>
+@endsection
