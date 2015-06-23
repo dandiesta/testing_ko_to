@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 # general
+use App\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 
@@ -22,6 +23,9 @@ class PackageController extends Controller
         $data['app'] = Package::selectByPackageId($id);
         $data['tags'] = $helper->getArrayable(Tag::selectByPackageId($id));
         $data['user_count'] = User::countUserPerPackage($id);
+        $data['owners'] = Application::getOwnersByAppId($data['app']->app_id);
+        $data['installed'] = Package::isInstalled($id);
+        $data['last_date_installed'] = Package::lastDateInstalled($id);
 
         $data['current_page'] = Route::currentRouteName();
         return view('pages.packages.index', $data);
@@ -86,6 +90,6 @@ class PackageController extends Controller
         Package::deleteById($package_id);
 
         return redirect()->route('app', ['id' => Request::input('app_id')]);
-
     }
+
 }

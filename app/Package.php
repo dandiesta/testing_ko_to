@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+
 
 class Package extends Model
 {
@@ -98,6 +100,7 @@ class Package extends Model
         return DB::table('package')
             ->where('id', $package_id)
             ->first();
+
     }
 
     public static function getInstalledByEmail($email)
@@ -106,10 +109,29 @@ class Package extends Model
             ->where('mail', $email)
             ->groupBy('package_id')
             ->get();
+
         $packages = [];
         foreach ($package_ids as $package) {
             $packages[] = self::getById($package->package_id);
         }
         return $packages;
+    }
+
+    public static function isInstalled($id)
+    {
+        return DB::table('install_log')
+            ->where('package_id', $id)
+            ->where('mail', Auth::user()->mail)
+            ->first();
+    }
+
+    public static function lastDateInstalled($id)
+    {
+        return DB::table('install_log')
+            ->select('installed')
+            ->where('package_id', $id)
+            ->where('mail', Auth::user()->mail)
+            ->orderBy('installed', 'desc')
+            ->first();
     }
 }
