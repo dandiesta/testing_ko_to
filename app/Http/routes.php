@@ -7,17 +7,21 @@ $router->group(['middleware' => 'auth'], function() {
 
     // Apps
     Route::get('/',                 ['as' => 'top_apps',       'uses' => 'ApplicationController@top_apps']);
-    Route::get('/app',              ['as' => 'app',            'uses' => 'ApplicationController@index']);
-    Route::get('/myapps/own',       ['as' => 'my_apps',        'uses' => 'ApplicationController@my_apps']);
-    Route::get('/myapps/installed', ['as' => 'installed_apps', 'uses' => 'ApplicationController@installed_apps']);
     Route::get('/top_apps',         ['as' => 'top_apps',       'uses' => 'ApplicationController@top_apps']);
+
+    Route::get('/app',              ['as' => 'app',            'uses' => 'ApplicationController@index']);
     Route::get('/app/comment',      ['as' => 'comment_app',    'uses' => 'ApplicationController@comment']);
     Route::get('/app/new',          ['as' => 'new_app',        'uses' => 'ApplicationController@newApp']);
     Route::get('/app/preferences',  ['as' => 'preferences',    'uses' => 'ApplicationController@preferences']);
 
     Route::post('/app/post_comment',['as' => 'post_comment',   'uses' => 'ApplicationController@postComment']);
 
+    // My Apps
+    Route::get('/myapps/own',       ['as' => 'my_apps',        'uses' => 'ApplicationController@my_apps']);
+    Route::get('/myapps/installed', ['as' => 'installed_apps', 'uses' => 'ApplicationController@installed_apps']);
+
     // Packages
+    Route::get('/app/upload',             ['as' => 'upload_package', 'uses' => 'PackageController@upload']);
     Route::get('/package',                ['as' => 'package',        'uses' => 'PackageController@index' ]);
     Route::get('/package/edit',           ['as' => 'edit_package',   'uses' => 'PackageController@edit' ]);
     Route::get('/package/delete_confirm', ['as' => 'delete_confirm', 'uses' => 'PackageController@delete_confirm']);

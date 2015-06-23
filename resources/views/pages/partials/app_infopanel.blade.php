@@ -2,7 +2,7 @@
 @if($app->is_owner)
   <div class="list-group-item">
     <ul class="nav nav-pills nav-stacked">
-      <li {{ ($action==='upload')?' class="active"':'' }}>
+      <li {!! ($action==='upload') ? 'class="active"' : '' !!} >
         <a href="{{ url("/app/upload?id={$app->id}") }}"><i class="fa fa-upload"></i> Upload</a>
       </li>
       <li {{ ($action==='preferences')?' class="active"':'' }}>
