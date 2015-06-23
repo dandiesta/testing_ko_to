@@ -41,11 +41,39 @@ class Package extends Model
         }
         return $this->tags;
     }
-
+    
     public static function deleteById($id)
     {
         DB::table('package')
             ->where('id', $id)
             ->delete();
+    }
+
+    public static function getCommentedByIds($ids)
+    {
+        $in = [];
+        foreach ($ids as $id) {
+            $in[] = $id->package_id;
+        }
+        $raw_package = DB::table('package')
+            ->whereIn('id', $in)
+            ->get();
+
+        $packages = [];
+        foreach ($raw_package as $package) {
+            $packages[$package->id] = $package;
+        }
+        return $packages;
+    }
+
+    public static function getTagsByPackageId($package_id)
+    {
+        return DB::table('package_tag')
+            ->selectRaw('
+            package_tag.*,
+            (SELECT name FROM tag WHERE tag.id = package_tag.tag_id) as name
+            ')
+            ->where('package_id', $package_id)
+            ->get();
     }
 }

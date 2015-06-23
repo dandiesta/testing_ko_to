@@ -56,8 +56,9 @@ class Application extends Model {
         return $applications;
     }
 
-    public static function getAppById($id) {
-
+    public static function getAppById($app_id)
+    {
+        return DB::table('application')->find($app_id);
     }
 
     public static function getAllApps()
@@ -92,6 +93,36 @@ class Application extends Model {
         return ($app) ? $app->last_installed : null;
     }
 
+    public static function checkUserOwnerByAppId($user_mail, $app_id)
+    {
+        $apps = DB::table('application_owner')
+            ->where('owner_email', $user_mail)
+            ->where('app_id', $app_id)
+            ->get();
+        return (count($apps) > 0);
+    }
+
+    public static function getInstallUserByAppId($app_id)
+    {
+        return DB::table('app_install_user')
+            ->where('app_id', $app_id)
+            ->get();
+    }
+
+    public static function getOwnersByAppId($app_id)
+    {
+        return DB::table('application_owner')
+            ->where('app_id', $app_id)
+            ->get();
+    }
+
+    public static function getTagsByAppId($app_id)
+    {
+        return DB::table('tag')
+            ->where('app_id', $app_id)
+            ->get();
+    }
+
     public static function getAppDetails($app_id)
     {
         $app = DB::table('application')
@@ -103,12 +134,16 @@ class Application extends Model {
 
     public static function getAppPackages($app_id)
     {
-        $app = DB::table('package')
+        $apps = DB::table('package')
             ->where('app_id', $app_id)
             ->get();
-
-        return $app;
+        $packages = [];
+        foreach ($apps as $app) {
+            $app->max_file_size = 50*1024*1024;//50 MB
+            $app->is_file_size_warned = ($app->max_file_size < $app->file_size);
+            $packages[] = $app;
+        }
+        return $packages;
     }
-
 
 }
