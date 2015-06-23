@@ -144,4 +144,11 @@ class Package extends Model
             ->orderBy('installed', 'desc')
             ->first();
     }
+    public static function installedUsers($id)
+    {
+        return DB::table('install_log')
+            ->where('package_id', $id)
+            ->groupBy('mail')
+            ->get();
+    }
 }

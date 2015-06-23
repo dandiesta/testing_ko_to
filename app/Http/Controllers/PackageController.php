@@ -22,14 +22,20 @@ class PackageController extends Controller
     public function index(Helper $helper)
     {
         $id = Request::input('id');
-        $data['app'] = Package::selectByPackageId($id);
-        $data['tags'] = $helper->getArrayable(Tag::selectByPackageId($id));
-        $data['user_count'] = User::countUserPerPackage($id);
-        $data['owners'] = Application::getOwnersByAppId($data['app']->app_id);
-        $data['installed'] = Package::isInstalled($id);
-        $data['last_date_installed'] = Package::lastDateInstalled($id);
+        $app = Package::selectByPackageId($id);
+        $app->tags = $helper->getArrayable(Tag::selectByPackageId($id));
+        $app->user_count = count(Package::installedUsers($app->id));
+        $app->owners = Application::getOwnersByAppId($app->app_id);
+        $app->is_installed = Package::isInstalled($id);
+        $app->last_date_installed = Package::lastDateInstalled($id);
+        $app->is_owner = Application::checkUserOwnerByAppId(Auth::user()->mail, $app->app_id);
+        $app->installed_users = Package::installedUsers($app->id);
+        
+        $data = [
+            'app' => $app,
+            'current_page' => Route::currentRouteName()
+        ];
 
-        $data['current_page'] = Route::currentRouteName();
         return view('pages.packages.index', $data);
     }
 
@@ -207,6 +213,5 @@ class PackageController extends Controller
         );
 
         return array($header,$xml);
-
     }
 }

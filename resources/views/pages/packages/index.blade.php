@@ -29,11 +29,11 @@
                 </p>
             </div>
             <div class="col-xs-5">
-                 @if($installed)
+                 @if($app->is_installed)
                     <a href="" class="btn btn-success col-xs-12"><i class="fa fa-check"></i> Installed</a>  {{-- $package->getInstallUrl() --}}
                     <dl id="installed-date">
                         <dt>Installed at</dt>
-                        <dd> {{ $last_date_installed->installed }} </dd>
+                        <dd> {{ $app->last_date_installed->installed }} </dd>
                     </dl>
                  @else
                     <a href="" class="btn btn-primary col-xs-12"><i class="fa fa-download"></i> Install</a> {{-- $package->getInstallUrl() --}}
@@ -46,7 +46,7 @@
                 <span class="label label-danger">Over {{ \App\Package::isFileSizeWarned($app->file_size) }} {{-- $package->getFileSizeLimitMB() --}} MB</span>
              @endif
 
-             @foreach($tags as $tag)
+             @foreach($app->tags as $tag)
                 <span class="label label-default">{{ $tag }}</span>
              @endforeach
         </p>
@@ -65,25 +65,26 @@
             <dt>File size</dt>
             <dd> {{ $app->file_size ? number_format($app->file_size):'-' }} bytes</dd>
             <dt>Installed user</dt>
-{{--             @if($app->isOwner($login_user)):--}}
-                {{--<dd>--}}
-                    {{--<div class="dropdown">--}}
-                        {{--<a class="dropdown-toggle" id="install-user-count" data-toggle="dropdown">--}}
-                        {{--</a>--}}
-                        {{--<ul class="dropdown-menu" role="menu" aria-labelledby="install-user-count">--}}
-                             {{--foreach($package->getInstallUsers() as $mail):--}}
-                                {{--<li role="presentation"><a role="menuitem" tabindex="-1"> --}}{{-- $mail --}}{{-- </a></li>--}}
-                             {{--endforeach--}}
-                        {{--</ul>--}}
-                    {{--</div>--}}
-                {{--</dd>--}}
-            {{-- else: --}}
-                <dd>{{ $user_count }}</dd>
-            {{-- endif --}}
+             @if($app->is_owner)
+                <dd>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" id="install-user-count" data-toggle="dropdown">
+                            {{ $app->user_count }}
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="install-user-count">
+                             @foreach($app->installed_users as $user)
+                                <li role="presentation"><a role="menuitem" tabindex="-1">  {{ $user->mail }}  </a></li>
+                             @endforeach
+                        </ul>
+                    </div>
+                </dd>
+             @else
+                <dd>{{ $app->user_count }}</dd>
+             @endif
             <dt>Uploaded</dt>
             <dd>{{-- $package->getCreated() --}}{{ date('Y-m-d H:i:s', strtotime($app->created_at)) }}</dd>
             <dt>Owners</dt>
-             @foreach($owners as $owner)
+             @foreach($app->owners as $owner)
                 <dd><a href="mailto:{{-- $owner->getOwnerMail()?> --}} {{-- $owner->getOwnerMail() --}}">
                         {{ $owner->owner_email }}
                     </a></dd>
