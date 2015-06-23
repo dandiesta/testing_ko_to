@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Aws\S3\S3Client;
+use Illuminate\Support\Facades\Auth;
 
 class Package extends Model
 {
     protected $table = 'package';
 
+    protected $fillable = ['title', 'description'];
     protected $tags = null;
+    public $timestamps = false;
 
     public static function selectByPackageId($id)
     {
@@ -35,12 +38,26 @@ class Package extends Model
         return $size;
     }
 
-    public function getTags()
+    public static function getDetails($id)
     {
-        if($this->tags===null){
-            $this->tags = TagDb::selectByPackageId($this->getId());
-        }
-        return $this->tags;
+        $details = DB::table('package')
+            ->where('id', $id)
+            ->first();
+        return $details;
+    }
+
+    public static function addNewTag($tag_id, $package_id)
+    {
+        DB::table('package_tag')
+            ->insert([
+                'package_id' => $package_id,
+                'tag_id' => $tag_id
+            ]);
+    }
+
+    public static function removeAllTags($package_id)
+    {
+        DB::table('package_tag')->where('package_id', $package_id)->delete();
     }
     
     public static function deleteById($id)
@@ -83,6 +100,7 @@ class Package extends Model
         return DB::table('package')
             ->where('id', $package_id)
             ->first();
+
     }
 
     public static function getInstalledByEmail($email)
@@ -91,6 +109,7 @@ class Package extends Model
             ->where('mail', $email)
             ->groupBy('package_id')
             ->get();
+
         $packages = [];
         foreach ($package_ids as $package) {
             $packages[] = self::getById($package->package_id);
@@ -108,4 +127,21 @@ class Package extends Model
         return $url;
     }
 
+    public static function isInstalled($id)
+    {
+        return DB::table('install_log')
+            ->where('package_id', $id)
+            ->where('mail', Auth::user()->mail)
+            ->first();
+    }
+
+    public static function lastDateInstalled($id)
+    {
+        return DB::table('install_log')
+            ->select('installed')
+            ->where('package_id', $id)
+            ->where('mail', Auth::user()->mail)
+            ->orderBy('installed', 'desc')
+            ->first();
+    }
 }

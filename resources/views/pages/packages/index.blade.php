@@ -37,15 +37,15 @@
                 </p>
             </div>
             <div class="col-xs-5">
-                {{-- if($login_user->getPackageInstalledDate($package)):  --}}
-                    {{--<a href="" class="btn btn-success col-xs-12"><i class="fa fa-check"></i> Installed</a> --}}{{-- $package->getInstallUrl() --}}
-                    {{--<dl id="installed-date">--}}
-                        {{--<dt>Instaled at</dt>--}}
-                        {{--<dd>--}}{{-- $login_user->getPackageInstalledDate($package) --}}{{--</dd>--}}
-                    {{--</dl>--}}
-                {{-- else: --}}
+                 @if($installed)
+                    <a href="" class="btn btn-success col-xs-12"><i class="fa fa-check"></i> Installed</a>  {{-- $package->getInstallUrl() --}}
+                    <dl id="installed-date">
+                        <dt>Installed at</dt>
+                        <dd> {{ $last_date_installed->installed }} </dd>
+                    </dl>
+                 @else
                     <a href="" class="btn btn-primary col-xs-12"><i class="fa fa-download"></i> Install</a> {{-- $package->getInstallUrl() --}}
-                {{-- endif --}}
+                 @endif
             </div>
         </div>
 
@@ -55,14 +55,14 @@
              @endif
 
              @foreach($tags as $tag)
-                <span class="label label-default">{{ $tag->name }}</span>
+                <span class="label label-default">{{ $tag }}</span>
              @endforeach
         </p>
 
         <dl class="dl-horizontal">
             <dt>Platform</dt>
             <dd>
-                @if ($app->platform == 'ios')
+                @if ($app->platform == 'iOS')
                     <i class="fa fa-apple"></i> iOS
                 @elseif($app->platform == 'android')
                     <i class="fa fa-apple"></i> Android
@@ -91,9 +91,11 @@
             <dt>Uploaded</dt>
             <dd>{{-- $package->getCreated() --}}{{ date('Y-m-d H:i:s', strtotime($app->created_at)) }}</dd>
             <dt>Owners</dt>
-            {{-- foreach($app->getOwners() as $owner): --}}
-                <dd><a href="mailto:{{-- $owner->getOwnerMail()?> --}} {{-- $owner->getOwnerMail() --}}">ASD</a></dd>
-            {{-- endforeach --}}
+             @foreach($owners as $owner)
+                <dd><a href="mailto:{{-- $owner->getOwnerMail()?> --}} {{-- $owner->getOwnerMail() --}}">
+                        {{ $owner->owner_email }}
+                    </a></dd>
+             @endforeach
         </dl>
 
         {{--<div class="col-xs-12 col-sm-9">--}}
