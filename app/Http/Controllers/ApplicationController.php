@@ -104,6 +104,67 @@ class ApplicationController extends Controller
         return view('myApps.installed', $data);
     }
 
+    public function comment()
+    {
+        $app_id = Request::input('id', null);
+        if (!$app_id) {
+            return redirect()->route('top_apps');
+        }
+        $app = Application::getAppById($app_id);
+        $app->install_user_count = UserPass::getCountUsersByApp($app_id);
+        $app->latest_user_install = Application::getLatestUserInstallDate(Auth::user()->mail, $app_id);
+        $app->is_owner = Application::checkUserOwnerByAppId(Auth::user()->mail, $app_id);
+        $app->install_user = Application::getInstallUserByAppId($app_id);
+        $app->owners = Application::getOwnersByAppId($app_id);
+        $app->tags = Application::getTagsByAppId($app_id);
+
+        $install_packages = Package::getInstalledByEmail(Auth::user()->mail);
+
+        $page = Request::input('page', 1);
+        $comment_count = Comment::getCountByApplication($app_id);
+        $top_comments = Comment::getTopByApplicationId($app_id, 20, ($page-1)*20);
+        $top_comments->setPath('custom/url');
+        $commented_package = Package::getCommentedByIds(Comment::getPackageIdsByApplicationId($app_id));
+
+        $data = [
+            'app' => $app,
+            'install_packages' => $install_packages,
+            'action' => 'comment',
+            'comment_count' => $comment_count,
+            'top_comments' => $top_comments,
+            'commented_package' => $commented_package,
+
+        ];
+        return view('app.comment', $data);
+    }
+
+    public function postComment()
+    {
+        $inputs = Request::all();
+        $comment_count = Comment::getCountByApplication($inputs['id']);
+        $mail = Auth::user()->mail;
+
+        $comment = new Comment();
+        $comment->app_id = $inputs['id'];
+        $comment->package_id = $inputs['package_id'];
+        $comment->message = $inputs['message'];
+        $comment->number = $comment_count + 1;
+        $comment->mail = $mail;
+        $comment->save();
+
+        return redirect()->route('comment_app', ['id'=>$inputs['id']]);
+    }
+
+    public function newApp()
+    {
+        return view('app.new', []);
+    }
+
+    public function preferences()
+    {
+        return view('app.preferences', []);
+    }
+
     public function documentation($page = 'api')
     {
         switch ($page)
@@ -125,4 +186,5 @@ class ApplicationController extends Controller
                 break;
         }
     }
+
 }

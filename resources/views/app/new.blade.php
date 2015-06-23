@@ -1,6 +1,9 @@
+@extends('pages.main')
+
+@section('content')
 
 <div class="well">
-  <form class="form-horizontal" method="post" action="<?=url('/app/create')?>" enctype="multipart/form-data">
+  {!! Form::open(array('url' => url('/app/create'), 'class'=> 'form-horizontal', 'enctype' => 'multipart/form-data')) !!}
     <fieldset>
       <legend>New application</legend>
 
@@ -73,7 +76,7 @@
       </div>
 
     </fieldset>
-  </form>
+  {!! Form::close() !!}
 
 </div>
 
@@ -151,3 +154,4 @@ $('form').submit(function(){
 
 
 </script>
+@endsection

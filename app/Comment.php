@@ -20,13 +20,12 @@ class Comment extends Model {
         return $count;
     }
 
-    public static function getTopByApplicationId($app_id)
+    public static function getTopByApplicationId($app_id, $limit = 2)
     {
         return DB::table('comment')
             ->where('app_id', $app_id)
             ->orderBy('number', 'desc')
-            ->take(2)
-            ->get();
+            ->paginate($limit);
     }
 
     public static function getPackageIdsByApplicationId($app_id)
