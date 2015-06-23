@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 # general
-use App\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Auth;
 
 # helper
 use App\Helper;
@@ -14,6 +14,8 @@ use App\Helper;
 use App\Package;
 use App\Tag;
 use App\User;
+use App\UserPass;
+use App\Application;
 
 class PackageController extends Controller
 {
@@ -90,6 +92,31 @@ class PackageController extends Controller
         Package::deleteById($package_id);
 
         return redirect()->route('app', ['id' => Request::input('app_id')]);
+    }
+
+    public function upload()
+    {
+        $app_id = Request::input('id');
+
+        $data['all_tags'] = Tag::getAll($app_id);
+        $app = Application::find($app_id);
+
+        $app->app_id = $app_id;
+        $app->app_title = $app->title;
+        $app->install_user_count = UserPass::getCountUsersByApp($app_id);
+        $app->latest_user_install = Application::getLatestUserInstallDate(Auth::user()->mail, $app_id);
+        $app->is_owner = Application::checkUserOwnerByAppId(Auth::user()->mail, $app_id);
+        $app->install_user = Application::getInstallUserByAppId($app_id);
+        $app->owners = Application::getOwnersByAppId($app_id);
+        $app->all_tags = Tag::getAll($app_id);
+
+        $data['app'] = $app;
+//        dd($app);
+        $data['action'] ='upload';
+
+        $data['current_page'] = Route::currentRouteName();
+//        dd($data);
+        return view('pages.packages.upload', $data);
     }
 
 }
