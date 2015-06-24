@@ -30,5 +30,6 @@ return array(
     'Diff' => array($vendorDir . '/phpspec/php-diff/lib'),
     'Cron' => array($vendorDir . '/mtdowling/cron-expression/src'),
     'Carbon' => array($vendorDir . '/nesbot/carbon/src'),
+    'CFPropertyList' => array($vendorDir . '/rodneyrehm/plist/classes'),
     'Aws' => array($vendorDir . '/aws/aws-sdk-php/src'),
 );
