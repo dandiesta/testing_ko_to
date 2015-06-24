@@ -70,10 +70,14 @@
 @endforeach
     </dl>
   </div>
-  <div class="list-group-item">
-    <div class="text-center">
-      <p>Download Latest App</p>
-      <img src="https://chart.googleapis.com/chart?chs=150&cht=qr&chl={{ route('install_package', ['id'=>$packages[0]->id]) }}">
-    </div>
-  </div>
+
+        @if (isset($packages))
+        <div class="list-group-item">
+            <div class="text-center">
+              <p>Download Latest App</p>
+              <img src="https://chart.googleapis.com/chart?chs=150&cht=qr&chl={{ route('install_package', ['id'=>$packages[0]->id]) }}">
+            </div>
+        </div>
+        @endif
+
 </div>

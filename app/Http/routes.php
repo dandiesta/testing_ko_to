@@ -1,6 +1,6 @@
 <?php
 
-Route::post('/login', ['as' => 'login', 'uses' => 'AuthController@login']);
+Route::get('/login', ['as' => 'login', 'uses' => 'AuthController@login']);
 Route::post('/authenticate', ['as' => 'authenticate', 'uses' => 'AuthController@authenticate']);
 
 $router->group(['middleware' => 'auth'], function() {
@@ -21,10 +21,13 @@ $router->group(['middleware' => 'auth'], function() {
     Route::get('/myapps/installed', ['as' => 'installed_apps', 'uses' => 'ApplicationController@installed_apps']);
 
     // Packages
-    Route::get('/app/upload',             ['as' => 'upload_package', 'uses' => 'PackageController@upload']);
     Route::get('/package',                ['as' => 'package',        'uses' => 'PackageController@index' ]);
     Route::get('/package/edit',           ['as' => 'edit_package',   'uses' => 'PackageController@edit' ]);
     Route::get('/package/delete_confirm', ['as' => 'delete_confirm', 'uses' => 'PackageController@delete_confirm']);
+    // Upload packages
+    Route::get('/app/upload',             ['as' => 'upload_package', 'uses' => 'PackageController@upload']);
+    Route::post('/upload/temporary', ['as' => 'upload_temp', 'uses' => 'PackageController@upload_temp']);
+    Route::post('/upload/new', ['as' => 'upload_new', 'uses' => 'PackageController@post_upload']);
 
     Route::post('/package/delete', ['as' => 'delete_package', 'uses' => 'PackageController@delete']);
     Route::get('/package/install', ['as' => 'install_package', 'uses' => 'PackageController@install']);
@@ -34,6 +37,7 @@ $router->group(['middleware' => 'auth'], function() {
 
     // Docs
     Route::get('/doc/{page}', ['as' => 'docs', 'uses' => 'ApplicationController@documentation']);
+
 
     // Logout
     Route::get('/logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);

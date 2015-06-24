@@ -9,11 +9,12 @@
         </div>
 
         <div class="col-xs-12 col-sm-8 col-md-9">
-            {!! Form::open(['url' => '', 'class' => 'form-horizontal']) !!}
+            {!! Form::open(['url' => route('upload_new'), 'class' => 'form-horizontal', 'id' => 'new_package']) !!}
                 <legend>Upload Package</legend>
 
                 <div class="form-group">
                     <input type="file" class="hidden" id="file-selector">
+                    <input type="hidden" id="app-id" name="app_id" value="{{ $app->id }}">
                     <input type="hidden" id="platform" name="platform" value="">
                     <input type="hidden" id="temp-name" name="temp_name" value="">
                     <input type="hidden" id="file-name" name="file_name" value="">
@@ -129,11 +130,13 @@
                     return false;
                 }
 
+                var token = $('#new_package').find('input[name="_token"]').val();
                 var fd = new FormData();
                 fd.append('file',file);
 
                 current_xhr = $.ajax({
-                    url: "<?=url('/api/upload_package_temporary?name=')?>"+file.name,
+                    headers: {'X-CSRF-TOKEN':token},
+                    url: "<?=url('/upload/temporary')?>",
                     type: "POST",
                     contentType: false,
                     data: fd,
@@ -149,6 +152,7 @@
                         return xhr;
                     },
                     success: function(data){
+                        data = JSON.parse(data[1]);
                         $('#platform').val(data.platform);
                         $('#temp-name').val(data.temp_name);
                         $('#ios-identifier').val(data.ios_identifier);

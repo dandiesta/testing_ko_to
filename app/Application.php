@@ -160,4 +160,11 @@ class Application extends Model {
         return $packages;
     }
 
+    public static function selectByApiKey($key)
+    {
+        return DB::table('application')
+            ->where('api_key', $key)
+            ->first();
+    }
+
 }
