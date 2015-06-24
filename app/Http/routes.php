@@ -1,6 +1,6 @@
 <?php
 
-Route::post('/login', ['as' => 'login', 'uses' => 'AuthController@login']);
+Route::get('/login', ['as' => 'login', 'uses' => 'AuthController@login']);
 Route::post('/authenticate', ['as' => 'authenticate', 'uses' => 'AuthController@authenticate']);
 
 $router->group(['middleware' => 'auth'], function() {
@@ -14,7 +14,10 @@ $router->group(['middleware' => 'auth'], function() {
     Route::get('/app/new',          ['as' => 'new_app',        'uses' => 'ApplicationController@newApp']);
     Route::get('/app/preferences',  ['as' => 'preferences',    'uses' => 'ApplicationController@preferences']);
 
-    Route::post('/app/post_comment',['as' => 'post_comment',   'uses' => 'ApplicationController@postComment']);
+    Route::post('/app/post_comment',       ['as' => 'post_comment',      'uses' => 'ApplicationController@postComment']);
+    Route::post('/app/preferences_update',  ['as' => 'update_preferences','uses' => 'ApplicationController@updatePreferences']);
+    Route::post('/app/preferences_delete_tags',  ['as' => 'delete_tags_preferences','uses' => 'ApplicationController@deleteTagsPreferences']);
+    Route::post('/app/preferences_update_owners',  ['as' => 'update_owners_preferences','uses' => 'ApplicationController@updateOwnersPreferences']);
 
     // My Apps
     Route::get('/myapps/own',       ['as' => 'my_apps',        'uses' => 'ApplicationController@my_apps']);
@@ -25,10 +28,10 @@ $router->group(['middleware' => 'auth'], function() {
     Route::get('/package',                ['as' => 'package',        'uses' => 'PackageController@index' ]);
     Route::get('/package/edit',           ['as' => 'edit_package',   'uses' => 'PackageController@edit' ]);
     Route::get('/package/delete_confirm', ['as' => 'delete_confirm', 'uses' => 'PackageController@delete_confirm']);
+    Route::get('/package/install',        ['as' => 'install_package','uses' => 'PackageController@install']);
+    Route::get('/package/install_plist', ['as' => 'install_plist',   'uses' => 'PackageController@install_plist']);
 
     Route::post('/package/delete', ['as' => 'delete_package', 'uses' => 'PackageController@delete']);
-    Route::get('/package/install', ['as' => 'install_package', 'uses' => 'PackageController@install']);
-    Route::get('/package/install_plist', ['as' => 'install_plist', 'uses' => 'PackageController@install_plist']);
     Route::post('/package/edit/save',     ['as' => 'save_package',   'uses' => 'PackageController@saveEdit']);
     Route::post('/package/delete',        ['as' => 'delete_package', 'uses' => 'PackageController@delete']);
 

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 # models
 use App\Comment;
@@ -14,6 +15,7 @@ class Application extends Model {
 
     protected $table = 'application';
 
+    protected $fillable = ['title', 'description', 'repository'];
     public function user() {
         return $this->belongsToMany('App\UserPass', 'application_owner', 'app_id', 'owner_email');
     }
@@ -158,6 +160,20 @@ class Application extends Model {
             $packages[] = $app;
         }
         return $packages;
+    }
+
+    public function addNewOwner($email, $app_id)
+    {
+        return DB::table('application_owner')
+            ->insert(['owner_email' => $email, 'app_id' => $app_id]);
+    }
+
+    public function deleteOwners($app_id)
+    {
+        return DB::table('application_owner')
+            ->where('app_id', $app_id)
+            ->whereNotIn('owner_email', [Auth::user()->mail])
+            ->delete();
     }
 
 }
