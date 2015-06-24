@@ -29,5 +29,12 @@ class Tag extends Model
         return $tags;
     }
 
+    public static function deleteFromPackage($tag_id)
+    {
+        DB::table('package_tag')
+            ->where('tag_id', $tag_id)
+            ->delete();
+    }
+
 
 }

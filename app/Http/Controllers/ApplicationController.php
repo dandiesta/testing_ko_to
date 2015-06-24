@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Validator;
+use Aws\Laravel\AwsFacade;
 
 # models
 use App\ApplicationOwner;
@@ -15,9 +17,24 @@ use App\UserPass;
 use App\Application;
 use App\Comment;
 use App\Package;
+use App\Tag;
 
 class ApplicationController extends Controller
 {
+    protected $rules = [
+        'title'         =>  'required|max:255',
+        'description'   =>  'required',
+        'repository'    =>  array('required', 'regex:/(https:\/\/github.com\/)([a-zA-Z0-9_-]+)(\/)([a-zA-Z0-9_-]+)/')
+    ];
+
+    protected $custom_messages = [
+        'title.max'             =>  'Title should not exceed 255 characters.',
+        'title.required'        =>  'Application Title is required.',
+        'description.required'  =>  'Description for the Application is required.',
+        'repository.required'   =>  'Repository link is required',
+        'repository.regex'      =>  'Invalid Git repository url'
+    ];
+
     public function package()
     {
         return view('pages.packages.index');
@@ -158,14 +175,54 @@ class ApplicationController extends Controller
         return redirect()->route('comment_app', ['id'=>$inputs['id']]);
     }
 
-    public function newApp()
+    public function createApp()
     {
-        return view('app.new', []);
+        $input = Input::all();
+        $validator = Validator::make($input, $this->rules, $this->custom_messages);
+
+        if($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $input['icon_name'] = str_random(10) . "." . $input['icon-selector']->getClientOriginalExtension();
+        $app_id = Application::createApp($input);
+
+        //Process image
+        if($input['icon-selector']->isValid()) {
+            $icon = $input['icon_name'];
+            $input['icon-selector']->move(public_path() . '/uploads/', $icon);
+            $s3 = AwsFacade::get('s3');
+            $s3->putObject(array(
+                'Bucket'        => env('AWS_S3_BUCKET'),
+                'Key'           => '/app-icons/' . $app_id . '/' . $icon,
+                'ACL'           => 'public-read',
+                'SourceFile'    => public_path() . '/uploads/' . $icon
+            ));
+
+            $input['icon-selector'] = 'app-icons/' . $app_id . '/' . $icon;
+        } else {
+            return redirect()->back()->withInput();
+        }
+
+        return redirect()->route('app', ['id' => $app_id]);
     }
 
     public function preferences()
     {
-        return view('app.preferences', []);
+        $app_id = Request::input('id');
+
+        $app = Application::find($app_id);
+        $app->owners = Application::getOwnersByAppId($app_id);
+        $app->is_owner = Application::checkUserOwnerByAppId(Auth::user()->mail, $app->id);
+        $app->install_user = Application::getInstallUserByAppId($app_id);
+        $app->all_tags = Tag::getAll($app->id);
+
+        $data = [
+            'app' => $app,
+            'action' => 'preferences'
+        ];
+
+        return view('app.preferences', $data);
     }
 
     public function documentation($page = 'api')
@@ -188,6 +245,51 @@ class ApplicationController extends Controller
                 return view('docs.api');
                 break;
         }
+    }
+
+    public function updatePreferences()
+    {
+        $input = Request::all();
+
+        //icon is not yet included
+        $app = Application::find($input['id']);
+        $app->title = $input['title'];
+        $app->description = $input['description'];
+        $app->repository = $input['repository'];
+        $app->save();
+
+        return redirect()->route('preferences', ['id' => $app->id]);
+    }
+
+    public function deleteTagsPreferences()
+    {
+        $input = Request::all();
+
+        foreach ($input['tags'] as $tag) {
+            Tag::deleteFromPackage($tag);
+            $t = Tag::find($tag);
+            $t->delete();
+        }
+
+        return redirect()->route('preferences', ['id' => $input['id']]);
+    }
+
+    public function updateOwnersPreferences(Application $app)
+    {
+        $input = Request::all();
+        $id = $input['id'];
+
+        $app->deleteOwners($id);
+
+        foreach ($input['owners'] as $owner) {
+            $owner = trim($owner);
+            if ($owner) {
+                $app->addNewOwner($owner, $id);
+                continue;
+            }
+        }
+
+        return redirect()->route('preferences', ['id' => $id]);
     }
 
 }

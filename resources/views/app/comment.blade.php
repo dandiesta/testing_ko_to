@@ -31,16 +31,16 @@
         <textarea name="message" class="form-control" rows="3"></textarea>
         <div class="controls text-right">
           <label for="package_id">Target package</label>
-@if(count($install_packages)>0)
-          <select name="package_id" class="form-control">
-@foreach($install_packages as $pkg)
-            <option value="{{ $pkg->id }}">
-              @include('pages/partials/platform_icon')
-              -
-              {{ $pkg->title }}</option>
-@endforeach
-          </select>
-@else
+            @if(count($install_packages)>0)
+                <select name="package_id" class="form-control">
+                    @foreach($install_packages as $pkg)
+                        <option value="{{ $pkg->id }}">
+                            @include('pages/partials/platform_icon')
+                            {{ $pkg->title }}
+                        </option>
+                    @endforeach
+                </select>
+            @else
           <select name="package_id" class="form-control" disabled="disabled">
             <option value="0" selected="selected">No package installed</option>
           </select>

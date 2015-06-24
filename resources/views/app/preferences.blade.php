@@ -9,38 +9,38 @@
     </a>
   </p>
   <div class="media-body">
-    <h2 class="media-hedding"><a href="<?=url("/app?id={$app->getId()}")?>"><?=htmlspecialchars($app->getTitle())?></a></h2>
-    <p><?=htmlspecialchars($app->getDescription())?></p>
+    <h2 class="media-hedding"><a href="<?=url("/app?id={$app->id}")?>"><?=htmlspecialchars($app->title)?></a></h2>
+    <p><?=htmlspecialchars($app->description)?></p>
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm-4 col-md-3 hidden-xs">
-    <?=block('app_infopanel')?>
+      @include('pages/partials/app_infopanel')
   </div>
 
   <div class="col-xs-12 col-sm-8 col-md-9">
 
     <div class="well">
-      <form id="refresh-apikey" class="form-inline" method="post" action="<?=url('/app/preferences_refresh_apikey')?>">
+        {!! Form::open(['url' => '', 'class' => 'form-inline', 'id' => 'refresh-apikey']) !!} {{-- url('/app/preferences_refresh_apikey') --}}
         <legend>API Key</legend>
-        <input type="hidden" name="id" value="<?=$app->getId()?>">
+        <input type="hidden" name="id" value="{{ $app->id }}">
         <div class="form-group">
           <label class="sr-only" for="api-key">API Key</label>
-          <input type="text" id="api-key" name="api-key" class="form-control" readonly="readonly" value="<?=htmlspecialchars($app->getAPIKey())?>">
+          <input type="text" id="api-key" name="api-key" class="form-control" readonly="readonly" value="{{ htmlspecialchars($app->api_key) }}">
         </div>
         <button id="submit-refresh-apikey" type="submit" class="btn btn-warning"><i class="fa fa-refresh"></i> Refresh</button>
         <div class="help-block">
           APIを利用するために必要なキーです.
           詳細は<a href="<?=url('/doc/api')?>">APIドキュメント</a>を参照してください.
         </div>
-      </form>
+      {!! Form::close() !!}
     </div>
 
     <div class="well">
-      <form id="edit-info" class="form-horizontal" method="post" action="<?=url('/app/preferences_update')?>" enctype="multipart/form-data">
-        <input type="hidden" name="id" value="<?=$app->getId()?>">
-        <legend>Edit Informations</legend>
+        {!! Form::open(['url' => route('update_preferences'), 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data']) !!}
+        <input type="hidden" name="id" value="{{ $app->id }}">
+        <legend>Edit Information</legend>
 
         <div class="row">
           <div class="col-lg-10 col-md-9 col-xs-12">
@@ -50,7 +50,7 @@
                 <div id="alert-notitle" class="alert alert-danger hidden">
                   タイトルが入力されていません
                 </div>
-                <input class="form-control" type="text" id="title" name="title" value="<?=htmlspecialchars($app->getTitle())?>">
+                <input class="form-control" type="text" id="title" name="title" value="{{ htmlspecialchars($app->title) }}">
               </div>
             </div>
 
@@ -71,7 +71,7 @@
           </div>
 
           <div class="col-lg-2 col-md-3 hidden-sm hidden-xs text-center">
-            <img id="icon-preview" class="img-thumbnail droparea" style="width:96px;height:96px;" src="<?=$app->getIconUrl()?>">
+            <img id="icon-preview" class="img-thumbnail droparea" style="width:96px;height:96px;" src="{{ env('AWS_URL') . $app->icon_key }}">
           </div>
         </div>
 
@@ -80,7 +80,7 @@
             <div class="form-group">
               <label for="description" class="control-label col-md-3">Description</label>
               <div class="col-md-9">
-                <textarea class="form-control" row="3" id="description" name="description"><?=htmlspecialchars($app->getDescription())?></textarea>
+                <textarea class="form-control" row="3" id="description" name="description">{{ htmlspecialchars($app->description) }}</textarea>
               </div>
             </div>
           </div>
@@ -91,7 +91,7 @@
             <div class="form-group">
               <label for="repository" class="control-label col-md-3">Repository</label>
               <div class="col-md-9">
-                <input type="text" class="form-control" id="repository" name="repository" value="<?=htmlspecialchars($app->getRepository())?>">
+                <input type="text" class="form-control" id="repository" name="repository" value="{{ htmlspecialchars($app->repository) }}">
               </div>
             </div>
           </div>
@@ -106,20 +106,20 @@
             </div>
           </div>
         </div>
-      </form>
+      {!! Form::close() !!}
     </div>
 
     <div class="well">
-      <form id="delete-tags" class="form-horizontal" method="post" action="<?=url('/app/preferences_delete_tags')?>">
-        <input type="hidden" name="id" value="<?=$app->getId()?>">
+        {!! Form::open(['url' => route('delete_tags_preferences'), 'class' => 'form-horizontal', 'id' => 'delete-tags']) !!}
+        <input type="hidden" name="id" value="{{ $app->id }}">
         <legend>Delete Tags</legend>
 
         <div class="form-group">
           <div class="col-xs-12">
-<?php foreach($app->getTags() as $tag): ?>
-            <input type="checkbox" class="hidden" name="tags[]" value="<?=htmlspecialchars($tag->getName())?>">
-            <button class="btn btn-default delete-tags" data-toggle="button"><?=htmlspecialchars($tag->getName())?></button>
-<?php endforeach ?>
+              @foreach($app->all_tags as $tag)
+                  <input type="checkbox" class="hidden" name="tags[]" value="{{ htmlspecialchars($tag->id) }}">
+                  <button class="btn btn-default delete-tags" data-toggle="button">{{ htmlspecialchars($tag->name) }}</button>
+              @endforeach
           </div>
         </div>
 
@@ -129,34 +129,34 @@
           </div>
         </div>
 
-      </form>
+      {!! Form::close() !!}
     </div>
 
     <div class="well">
-      <form id="owners" class="form-horizontal" method="post" action="<?=url('/app/preferences_update_owners')?>">
-        <input type="hidden" name="id" value="<?=$app->getId()?>">
+        {!! Form::open(['url' => route('update_owners_preferences'), 'id' => 'owners', 'class' => 'form-horizontal']) !!}
+        <input type="hidden" name="id" value="{{ $app->id }}">
         <legend>Owners</legend>
 
         <div class="form-group">
           <div class="col-xs-12">
             <div class="form-control" readonly="readonly">
-              <?=htmlspecialchars($login_user->getMail())?>
+              {{ Auth::user()->mail }}
             </div>
           </div>
         </div>
 
-<?php foreach($app->getOwners() as $owner):?>
-<?php   if($owner->getOwnerMail()===$login_user->getMail()) continue; ?>
-        <div class="form-group edit-owner">
-          <div class="col-xs-12">
-            <div class="form-control" readonly="readonly">
-              <button type="button" class="close pull-left"><i class="fa"></i></button>
-              <span><?=htmlspecialchars($owner->getOwnerMail())?></span>
-              <input type="hidden" name="owners[]" value="<?=htmlspecialchars($owner->getOwnerMail())?>">
-            </div>
-          </div>
-        </div>
-<?php endforeach ?>
+        @foreach($app->owners as $owner)
+        <?php if($owner->owner_email == Auth::user()->mail) continue; ?>
+                <div class="form-group edit-owner">
+                  <div class="col-xs-12">
+                    <div class="form-control" readonly="readonly">
+                      <button type="button" class="close pull-left"><i class="fa"></i></button>
+                      <span><?=htmlspecialchars($owner->owner_email)?></span>
+                      <input type="hidden" name="owners[]" value="<?=htmlspecialchars($owner->owner_email)?>">
+                    </div>
+                  </div>
+                </div>
+        @endforeach
 
         <div id="owner-form-template" class="form-group edit-owner add hidden">
           <div class="col-xs-12">
@@ -181,17 +181,18 @@
           </div>
         </div>
 
-      </form>
+      {!! Form::close() !!}
     </div>
 
   </div>
 </div>
 
 <div class="visible-xs">
-  <?=block('app_infopanel')?>
+    @include('pages/partials/app_infopanel')
 </div>
 
-<script type="text/javascript">
+@section('scripts')
+    <script type="text/javascript">
 
 // API Key
 $('#submit-refresh-apikey').on('click',function(){
@@ -213,7 +214,7 @@ $('#icon-preview').on('click',function(event){
 function setIconFile(file){
   $('#icon-data').val(null);
   $('#icon-text').val(null);
-  $('#icon-preview').attr('src','<?=$app->getIconUrl()?>');
+  $('#icon-preview').attr('src',"{{ env('AWS_URL') . $app->icon_key }}");
   $('#alert-icon-size-limit').addClass('hidden');
 
   if(!file || !file.type.match('^image/(png|gif|jpeg)$')){
@@ -314,4 +315,5 @@ $('#add-owner button').on('click',function(event){
 });
 
 </script>
+@stop
 @endsection

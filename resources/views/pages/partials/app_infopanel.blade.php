@@ -70,8 +70,7 @@
 @endforeach
     </dl>
   </div>
-
-        @if (isset($packages))
+        @if (isset($packages) && count($packages) > 0)
         <div class="list-group-item">
             <div class="text-center">
               <p>Download Latest App</p>
@@ -79,5 +78,4 @@
             </div>
         </div>
         @endif
-
 </div>
