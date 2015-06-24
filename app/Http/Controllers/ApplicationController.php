@@ -17,6 +17,7 @@ use App\UserPass;
 use App\Application;
 use App\Comment;
 use App\Package;
+use App\Tag;
 
 class ApplicationController extends Controller
 {
@@ -208,7 +209,20 @@ class ApplicationController extends Controller
 
     public function preferences()
     {
-        return view('app.preferences', []);
+        $app_id = Request::input('id');
+
+        $app = Application::find($app_id);
+        $app->owners = Application::getOwnersByAppId($app_id);
+        $app->is_owner = Application::checkUserOwnerByAppId(Auth::user()->mail, $app->id);
+        $app->install_user = Application::getInstallUserByAppId($app_id);
+        $app->all_tags = Tag::getAll($app->id);
+
+        $data = [
+            'app' => $app,
+            'action' => 'preferences'
+        ];
+
+        return view('app.preferences', $data);
     }
 
     public function documentation($page = 'api')
@@ -231,6 +245,51 @@ class ApplicationController extends Controller
                 return view('docs.api');
                 break;
         }
+    }
+
+    public function updatePreferences()
+    {
+        $input = Request::all();
+
+        //icon is not yet included
+        $app = Application::find($input['id']);
+        $app->title = $input['title'];
+        $app->description = $input['description'];
+        $app->repository = $input['repository'];
+        $app->save();
+
+        return redirect()->route('preferences', ['id' => $app->id]);
+    }
+
+    public function deleteTagsPreferences()
+    {
+        $input = Request::all();
+
+        foreach ($input['tags'] as $tag) {
+            Tag::deleteFromPackage($tag);
+            $t = Tag::find($tag);
+            $t->delete();
+        }
+
+        return redirect()->route('preferences', ['id' => $input['id']]);
+    }
+
+    public function updateOwnersPreferences(Application $app)
+    {
+        $input = Request::all();
+        $id = $input['id'];
+
+        $app->deleteOwners($id);
+
+        foreach ($input['owners'] as $owner) {
+            $owner = trim($owner);
+            if ($owner) {
+                $app->addNewOwner($owner, $id);
+                continue;
+            }
+        }
+
+        return redirect()->route('preferences', ['id' => $id]);
     }
 
 }

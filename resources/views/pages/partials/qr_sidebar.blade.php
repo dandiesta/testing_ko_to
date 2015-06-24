@@ -1,5 +1,5 @@
 <div class="list-group">
-    @if (true)
+    @if ($app->is_owner)
     <div class="list-group-item">
         <ul class="nav nav-pills nav-stacked">
             <li @if ($current_page == 'edit_package') class="active" @endif>
