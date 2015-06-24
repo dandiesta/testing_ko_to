@@ -13,7 +13,8 @@ $router->group(['middleware' => 'auth'], function() {
     Route::get('/top_apps', ['as' => 'top_apps', 'uses' => 'ApplicationController@top_apps']);
     Route::get('/app/comment', ['as' => 'comment_app', 'uses' => 'ApplicationController@comment']);
     Route::post('/app/post_comment', ['as' => 'post_comment', 'uses' => 'ApplicationController@postComment']);
-    Route::get('/app/new', ['as' => 'new_app', 'uses' => 'ApplicationController@newApp']);
+    Route::get('/app/new', ['as' => 'new_app', function() { return view('app.new', []); }]);
+    Route::post('app/create', ['as' => 'create_app', 'uses' => 'ApplicationController@createApp'] );
     Route::get('/app/preferences', ['as' => 'preferences', 'uses' => 'ApplicationController@preferences']);
 
     // Packages

@@ -6,7 +6,7 @@
             <small class="subtitle">Only my APP can shoot it.</small>
         </h2>
         <div id="create-app-button" class="hidden-xs col-sm-4 text-right">
-            <a class="btn btn-default" href="#"><i class="fa fa-plus"></i> New Application</a>
+            <a class="btn btn-default" href="{{ route('new_app') }}"><i class="fa fa-plus"></i> New Application</a>
         </div>
     </div>
 
@@ -18,7 +18,7 @@
                 {{--Link to App Page--}}
                 <a href="#">
                     {{--App's Icon--}}
-                    <img class="app-icon-sm media-object img-rounded" src="{{ env('AWS_URL') . $app->icon_key }}">
+                    <img class="app-icon-sm media-object img-rounded" src="{{ env('AWS_S3_ENDPOINT') . '/app-icons/'. $app->icon_key }}">
                 </a>
             </p>
             <div class="media-body">
@@ -55,7 +55,7 @@
 
     {{--New Application Button--}}
     <div id="create-app-button" class="col-xs-12 visible-xs text-left">
-        <a class="btn btn-default" href="<?=url('/app/new')?>"><i class="fa fa-plus"></i> New Application</a>
+        <a class="btn btn-default" href="{{ route('new_app') }}"><i class="fa fa-plus"></i> New Application</a>
     </div>
 
     {{--Pagination thingy--}}
