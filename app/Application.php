@@ -2,6 +2,8 @@
 namespace App;
 
 # general
+use Aws\Laravel\AwsFacade;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
@@ -10,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 # models
 use App\Comment;
 use App\UserPass;
+use Illuminate\Support\Facades\Auth;
 
 class Application extends Model {
 
@@ -18,6 +21,46 @@ class Application extends Model {
     protected $fillable = ['title', 'description', 'repository'];
     public function user() {
         return $this->belongsToMany('App\UserPass', 'application_owner', 'app_id', 'owner_email');
+    }
+
+    public static function createApp($data)
+    {
+        $app_id = DB::table('application')->insertGetId([
+            'title'         =>  $data['title'],
+            'icon_key'      =>  $data['icon_name'],
+            'api_key'       =>  self::makeApiKey(),
+            'description'   =>  $data['description'],
+            'repository'    =>  $data['repository'],
+            'date_to_sort'  =>  Carbon::today(),
+            'created_at'    =>  Carbon::today(),
+            'updated_at'    =>  Carbon::today()
+        ]);
+
+        if(!empty($app_id)) {
+            DB::table('application_owner')->insert([
+                'app_id'        =>  $app_id,
+                'owner_email'    =>  Auth::user()->mail,
+                'created_at'    =>  Carbon::today(),
+                'updated_at'    =>  Carbon::today()
+            ]);
+        }
+
+        return $app_id;
+    }
+
+    public static function makeApiKey()
+    {
+        do{
+            $api_key = str_random();
+        }while(static::selectByApiKey($api_key));
+        return $api_key;
+    }
+
+    public static function selectByApiKey($key)
+    {
+        $api_key = DB::table('application')->where('api_key', $key)->first();
+
+        return (empty($api_key)) ? false : true;
     }
 
     public static function getUserAppsByEmail($email)

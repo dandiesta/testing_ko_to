@@ -19,7 +19,7 @@
 @foreach($installed_apps as $app)
     <tr>
       <td class="text-center icon">
-        <a href="{{ url('/app?id='.$app->id) }}"><img src="{{ env('AWS_URL') . $app->icon_key }}"></a>
+        <a href="{{ url('/app?id='.$app->id) }}"><img src="{{ env('AWS_S3_ENDPOINT') . 'app-icons/'. $app->id . '/' . $app->icon_key }}"></a>
       </td>
 
       <td colspan="2">

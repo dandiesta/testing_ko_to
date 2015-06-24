@@ -49,9 +49,11 @@ class UserPass extends Model implements AuthenticatableContract, CanResetPasswor
 
     public static function isAppNotify($app_id)
     {
-        return DB::table('app_install_user')
+        $app = DB::table('app_install_user')
             ->where('app_id', $app_id)
             ->where('mail', Auth::user()->mail)
-            ->first()->notify;
+            ->first();
+
+        return (!empty($app)) ? $app->notify : 0;
     }
 }

@@ -145,6 +145,7 @@ return [
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
+        'Aws\Laravel\AwsServiceProvider',
 
 	],
 
@@ -162,6 +163,7 @@ return [
 	'aliases' => [
 
 		'App'       => 'Illuminate\Support\Facades\App',
+        'AWS'       => 'Aws\Laravel\AwsFacade',
 		'Artisan'   => 'Illuminate\Support\Facades\Artisan',
 		'Auth'      => 'Illuminate\Support\Facades\Auth',
 		'Blade'     => 'Illuminate\Support\Facades\Blade',
