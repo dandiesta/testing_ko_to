@@ -18,7 +18,7 @@
                 {{--Link to App Page--}}
                 <a href="#">
                     {{--App's Icon--}}
-                    <img class="app-icon-sm media-object img-rounded" src="{{ env('AWS_S3_ENDPOINT') . '/app-icons/'. $app->icon_key }}">
+                    <img class="app-icon-sm media-object img-rounded" src="{{ env('AWS_S3_ENDPOINT') . 'app-icons/' . $app->id . '/' . $app->icon_key }}">
                 </a>
             </p>
             <div class="media-body">
