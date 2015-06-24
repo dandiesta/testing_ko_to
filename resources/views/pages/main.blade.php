@@ -35,7 +35,7 @@
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         @if(Auth::check())
         <ul class="nav navbar-nav">
-            <li><a href="{{ route('login') }}">Top</a></li>
+            <li><a href="{{ route('top_apps') }}">Top</a></li>
             <li class="dropdown">
                 <a hfer="#" class="dropdown-toggle" data-toggle="dropdown">My apps <b class="caret"></b></a>
                 <ul class="dropdown-menu">

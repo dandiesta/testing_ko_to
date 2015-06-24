@@ -9,3 +9,4 @@ dbauth/
 /vendor
 /node_modules
 app/storage/
+public/uploads

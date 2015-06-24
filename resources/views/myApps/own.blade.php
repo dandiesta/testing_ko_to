@@ -11,7 +11,7 @@
 <div class="media app-list-item col-md-6">
   <p class="pull-left">
     <a href="{{ "/app?id={$app->id}" }}">
-      <img class="app-icon-sm media-object img-rounded" src="{{ env('AWS_URL') . $app->icon_key }}">
+      <img class="app-icon-sm media-object img-rounded" src="{{ env('AWS_S3_ENDPOINT') . 'app-icons/'. $app->id . '/' . $app->icon_key }}">
     </a>
   </p>
   <div class="media-body">

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Validator;
+use Aws\Laravel\AwsFacade;
 
 # models
 use App\ApplicationOwner;
@@ -18,6 +20,20 @@ use App\Package;
 
 class ApplicationController extends Controller
 {
+    protected $rules = [
+        'title'         =>  'required|max:255',
+        'description'   =>  'required',
+        'repository'    =>  array('required', 'regex:/(https:\/\/github.com\/)([a-zA-Z0-9_-]+)(\/)([a-zA-Z0-9_-]+)/')
+    ];
+
+    protected $custom_messages = [
+        'title.max'             =>  'Title should not exceed 255 characters.',
+        'title.required'        =>  'Application Title is required.',
+        'description.required'  =>  'Description for the Application is required.',
+        'repository.required'   =>  'Repository link is required',
+        'repository.regex'      =>  'Invalid Git repository url'
+    ];
+
     public function package()
     {
         return view('pages.packages.index');
@@ -158,9 +174,36 @@ class ApplicationController extends Controller
         return redirect()->route('comment_app', ['id'=>$inputs['id']]);
     }
 
-    public function newApp()
+    public function createApp()
     {
-        return view('app.new', []);
+        $input = Input::all();
+        $validator = Validator::make($input, $this->rules, $this->custom_messages);
+
+        if($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $input['icon_name'] = str_random(10) . "." . $input['icon-selector']->getClientOriginalExtension();
+        $app_id = Application::createApp($input);
+
+        //Process image
+        if($input['icon-selector']->isValid()) {
+            $icon = $input['icon_name'];
+            $input['icon-selector']->move(public_path() . '/uploads/', $icon);
+            $s3 = AwsFacade::get('s3');
+            $s3->putObject(array(
+                'Bucket'        => env('AWS_S3_BUCKET'),
+                'Key'           => '/app-icons/' . $app_id . '/' . $icon,
+                'ACL'           => 'public-read',
+                'SourceFile'    => public_path() . '/uploads/' . $icon
+            ));
+
+            $input['icon-selector'] = $icon;
+        } else {
+            return redirect()->back()->withInput();
+        }
+
+        return redirect()->route('app', ['id' => $app_id]);
     }
 
     public function preferences()

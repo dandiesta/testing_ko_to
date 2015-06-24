@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="well">
-  {!! Form::open(array('url' => url('/app/create'), 'class'=> 'form-horizontal', 'enctype' => 'multipart/form-data')) !!}
+  {!! Form::open(array('route' => 'create_app', 'method' => 'post', 'class'=> 'form-horizontal', 'enctype' => 'multipart/form-data')) !!}
     <fieldset>
       <legend>New application</legend>
 
@@ -12,9 +12,15 @@
           <div class="form-group">
 	        <label for="title" class="control-label col-md-2 required">Title</label>
             <div class="col-md-10">
-              <div id="alert-notitle" class="alert alert-danger hidden">
-                タイトルが入力されていません
-              </div>
+                @if(!$errors->isEmpty() && !empty($errors->get('title')))
+                    <div id="alert-notitle" class="alert alert-danger" style="margin-bottom: -4px">
+                        <p>
+                            @foreach($errors->get('title') as $msg)
+                                &nbsp; {{ $msg }} <br>
+                            @endforeach
+                        </p>
+                    </div>
+                @endif
               <input class="form-control" type="text" id="title" name="title">
             </div>
           </div>
@@ -28,8 +34,7 @@
               <div id="alert-noicon" class="alert alert-danger hidden">
                 アイコン画像が指定されていません
               </div>
-              <input type="hidden" id="icon-data" name="icon-data" value="">
-              <input type="file" id="icon-selector" class="hidden">
+              {!! Form::file('icon-selector', ['id' => 'icon-selector', 'class' => 'hidden']) !!}
               <div class="input-group"  id="input-group-icon">
                 <input type="text" class="form-control droparea" id="icon-text" readonly="readonly">
                 <a id="icon-browse" class="input-group-addon btn btn-default">Browse</a>
@@ -45,6 +50,15 @@
 
       <div class="row">
         <div class="col-md-10">
+            @if(!$errors->isEmpty() && !empty($errors->get('description')))
+                <div id="alert-notitle" class="alert alert-danger" style="margin-bottom: -4px">
+                    <p>
+                        @foreach($errors->get('description') as $msg)
+                            &nbsp; {{ $msg }} <br>
+                        @endforeach
+                    </p>
+                </div>
+            @endif
           <div class="form-group">
             <label for="description" class="control-label col-md-2">Description</label>
             <div class="col-md-10">
@@ -56,6 +70,15 @@
 
       <div class="row">
         <div class="col-md-10">
+            @if(!$errors->isEmpty() && !empty($errors->get('repository')))
+                <div id="alert-notitle" class="alert alert-danger" style="margin-bottom: -4px">
+                    <p>
+                        @foreach($errors->get('repository') as $msg)
+                            &nbsp; {{ $msg }} <br>
+                        @endforeach
+                    </p>
+                </div>
+            @endif
           <div class="form-group">
             <label for="repository" class="control-label col-md-2">Repository</label>
             <div class="col-md-10">
