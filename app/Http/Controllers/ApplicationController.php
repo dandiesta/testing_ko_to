@@ -199,7 +199,7 @@ class ApplicationController extends Controller
                 'SourceFile'    => public_path() . '/uploads/' . $icon
             ));
 
-            $input['icon-selector'] = $icon;
+            $input['icon-selector'] = 'app-icons/' . $app_id . '/' . $icon;
         } else {
             return redirect()->back()->withInput();
         }

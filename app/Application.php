@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 # models
 use App\Comment;
 use App\UserPass;
-use Illuminate\Support\Facades\Auth;
 
 class Application extends Model {
 
