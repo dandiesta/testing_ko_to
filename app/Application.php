@@ -17,34 +17,35 @@ class Application extends Model {
 
     protected $table = 'application';
 
-    protected $fillable = ['title', 'description', 'repository'];
+    protected $fillable = ['title', 'description', 'repository', 'api_key', 'icon_key', 'date_to_sort'];
     public function user() {
         return $this->belongsToMany('App\UserPass', 'application_owner', 'app_id', 'owner_email');
     }
 
     public static function createApp($data)
     {
-        $app_id = DB::table('application')->insertGetId([
+        $params = [
             'title'         =>  $data['title'],
             'icon_key'      =>  $data['icon-selector'],
             'api_key'       =>  self::makeApiKey(),
             'description'   =>  $data['description'],
             'repository'    =>  $data['repository'],
-            'date_to_sort'  =>  Carbon::today(),
-            'created_at'    =>  Carbon::today(),
-            'updated_at'    =>  Carbon::today()
-        ]);
+            'date_to_sort'  =>  Carbon::today()
+        ];
 
-        if(!empty($app_id)) {
+        $app = new Application($params);
+        $app->save();
+
+        if(!empty($app)) {
             DB::table('application_owner')->insert([
-                'app_id'        =>  $app_id,
+                'app_id'        =>  $app->id,
                 'owner_email'    =>  Auth::user()->mail,
                 'created_at'    =>  Carbon::today(),
                 'updated_at'    =>  Carbon::today()
             ]);
         }
 
-        return $app_id;
+        return $app;
     }
 
     public static function makeApiKey()

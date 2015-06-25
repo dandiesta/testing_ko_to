@@ -189,7 +189,7 @@ class ApplicationController extends Controller
         }
 
         $input['icon_name'] = str_random(10) . "." . $input['icon-selector']->getClientOriginalExtension();
-        $app_id = Application::createApp($input);
+        $app = Application::createApp($input);
 
         //Process image
         if($input['icon-selector']->isValid()) {
@@ -198,17 +198,19 @@ class ApplicationController extends Controller
             $s3 = AwsFacade::get('s3');
             $s3->putObject(array(
                 'Bucket'        => env('AWS_S3_BUCKET'),
-                'Key'           => '/app-icons/' . $app_id . '/' . $icon,
+                'Key'           => '/app-icons/' . $app->id . '/' . $icon,
                 'ACL'           => 'public-read',
                 'SourceFile'    => public_path() . '/uploads/' . $icon
             ));
 
-            $input['icon-selector'] = 'app-icons/' . $app_id . '/' . $icon;
+            $app->icon_key = 'app-icons/' . $app->id . '/' . $icon;
+            $app->save();
+
         } else {
             return redirect()->back()->withInput();
         }
 
-        return redirect()->route('app', ['id' => $app_id]);
+        return redirect()->route('app', ['id' => $app->id]);
     }
 
     public function preferences()
@@ -266,8 +268,6 @@ class ApplicationController extends Controller
 
         if (isset($input['icon-selector'])) {
             $input['icon_name'] = str_random(10) . "." . $input['icon-selector']->getClientOriginalExtension();
-
-            $bucket = env('AWS_S3_BUCKET');
 
             if($input['icon-selector']->isValid()) {
                 $icon = $input['icon_name'];
