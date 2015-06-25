@@ -42,14 +42,21 @@
         <input type="hidden" name="id" value="{{ $app->id }}">
         <legend>Edit Information</legend>
 
+        @if(!$errors->isEmpty() && !empty($errors->all()))
+            <div id="alert-notitle" class="alert alert-danger" style="margin-bottom: 4px">
+                <p>
+                    @foreach($errors->all() as $msg)
+                        &nbsp; {{ $msg }} <br>
+                    @endforeach
+                </p>
+            </div>
+        @endif
+
         <div class="row">
           <div class="col-lg-10 col-md-9 col-xs-12">
             <div class="form-group">
 	          <label for="title" class="control-label col-md-3 required">Title</label>
               <div class="col-md-9">
-                <div id="alert-notitle" class="alert alert-danger hidden">
-                  タイトルが入力されていません
-                </div>
                 <input class="form-control" type="text" id="title" name="title" value="{{ htmlspecialchars($app->title) }}">
               </div>
             </div>

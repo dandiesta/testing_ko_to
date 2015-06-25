@@ -164,6 +164,8 @@ class ApplicationController extends Controller
         $comment_count = Comment::getCountByApplication($inputs['id']);
         $mail = Auth::user()->mail;
 
+
+
         $comment = new Comment();
         $comment->app_id = $inputs['id'];
         $comment->package_id = $inputs['package_id'];
@@ -181,7 +183,7 @@ class ApplicationController extends Controller
         $validator = Validator::make($input, $this->rules, $this->custom_messages);
 
         if($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()->withErrors($validator)->withInput($input);
         }
 
         $input['icon_name'] = str_random(10) . "." . $input['icon-selector']->getClientOriginalExtension();
@@ -250,6 +252,12 @@ class ApplicationController extends Controller
     public function updatePreferences()
     {
         $input = Request::all();
+
+        $validator = Validator::make($input, $this->rules, $this->custom_messages);
+
+        if($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput($input);
+        }
 
         //icon is not yet included
         $app = Application::find($input['id']);

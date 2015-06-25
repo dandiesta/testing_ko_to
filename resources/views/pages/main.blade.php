@@ -30,7 +30,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="{{ route('login') }}" class="navbar-brand"><span>EMLauncher</span></a>
+        <a href="{{ route('top_apps') }}" class="navbar-brand"><span>EMLauncher</span></a>
     </div>
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         @if(Auth::check())
