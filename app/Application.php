@@ -26,7 +26,7 @@ class Application extends Model {
     {
         $app_id = DB::table('application')->insertGetId([
             'title'         =>  $data['title'],
-            'icon_key'      =>  $data['icon_name'],
+            'icon_key'      =>  $data['icon-selector'],
             'api_key'       =>  self::makeApiKey(),
             'description'   =>  $data['description'],
             'repository'    =>  $data['repository'],
