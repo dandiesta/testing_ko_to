@@ -20,7 +20,9 @@ class Package extends Model
         'description',
         'ios_identifier',
         'original_filename',
-        'file_size'
+        'file_size',
+        'created_at',
+        'updated_at'
     ];
     protected $tags = null;
     public $timestamps = false;
