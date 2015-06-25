@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Aws\Laravel\AwsFacade;
 
@@ -288,19 +289,21 @@ class ApplicationController extends Controller
             }
         }
 
-
-
         $app->title = $input['title'];
         $app->description = $input['description'];
         $app->repository = $input['repository'];
         $app->save();
 
-        return redirect()->route('preferences', ['id' => $app->id]);
+        return redirect(route('preferences', ['id' => $app->id]) . '#edit-info');
     }
 
     public function deleteTagsPreferences()
     {
         $input = Request::all();
+
+        if (!isset($input['tags'])) {
+            return redirect(route('preferences', ['id' => $input['id']]) . '#delete-tags');
+        }
 
         foreach ($input['tags'] as $tag) {
             Tag::deleteFromPackage($tag);
@@ -308,7 +311,7 @@ class ApplicationController extends Controller
             $t->delete();
         }
 
-        return redirect()->route('preferences', ['id' => $input['id']]);
+        return redirect(route('preferences', ['id' => $input['id']]) . '#delete-tags');
     }
 
     public function updateOwnersPreferences(Application $app)
@@ -326,7 +329,7 @@ class ApplicationController extends Controller
             }
         }
 
-        return redirect()->route('preferences', ['id' => $id]);
+        return redirect(route('preferences', ['id' => $id]) . '#owners');
     }
 
     public function updateAPI()
