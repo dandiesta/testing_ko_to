@@ -275,6 +275,8 @@ class PackageController extends Controller
 
         $input['created_at'] = Carbon::today();
         $input['updated_at'] = Carbon::today();
+        $input['original_file_name'] = $input['file_name'];
+        $input['file_name'] = $input['temp_name'];
         $package = new Package($input);
         $package->save();
         foreach ($input['tags'] as $tag) {
