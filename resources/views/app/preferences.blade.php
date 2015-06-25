@@ -22,13 +22,14 @@
   <div class="col-xs-12 col-sm-8 col-md-9">
 
     <div class="well">
-        {!! Form::open(['url' => route('update_api')', 'class' => 'form-inline', 'id' => 'refresh-apikey']) !!} {{-- url('/app/preferences_refresh_apikey') --}}
+        {!! Form::open(['url' => route('update_api'), 'class' => 'form-inline']) !!} {{-- url('/app/preferences_refresh_apikey') --}}
         <legend>API Key</legend>
         <input type="hidden" name="id" value="{{ $app->id }}">
         <div class="form-group">
           <label class="sr-only" for="api-key">API Key</label>
-          <input type="text" id="api-key" name="api-key" class="form-control" readonly="readonly" value="{{ htmlspecialchars($app->api_key) }}">
+          <input type="text" class="form-control" readonly="readonly" value="{{ htmlspecialchars($app->api_key) }}">
         </div>
+        {{--{!! Form::submit('Refresh', ['class' => 'btn btn-warning']) !!}--}}
         <button type="submit" class="btn btn-warning"><i class="fa fa-refresh"></i> Refresh</button>
         <div class="help-block">
           APIを利用するために必要なキーです.
