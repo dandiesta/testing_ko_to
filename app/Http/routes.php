@@ -14,6 +14,7 @@ $router->group(['middleware' => 'auth'], function() {
     Route::get('/app/new',          ['as' => 'new_app',        'uses' => 'ApplicationController@newApp']);
     Route::get('/app/preferences',  ['as' => 'preferences',    'uses' => 'ApplicationController@preferences']);
 
+    Route::post('/app/update_api',   ['as' => 'update_api',     'uses' => 'ApplicationController@updateAPI']);
     Route::post('/app/post_comment',       ['as' => 'post_comment',      'uses' => 'ApplicationController@postComment']);
     Route::post('/app/preferences_update',  ['as' => 'update_preferences','uses' => 'ApplicationController@updatePreferences']);
     Route::post('/app/preferences_delete_tags',  ['as' => 'delete_tags_preferences','uses' => 'ApplicationController@deleteTagsPreferences']);

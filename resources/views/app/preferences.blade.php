@@ -5,7 +5,7 @@
 <div class="media">
   <p class="pull-left">
     <a href="{{ "/app?id={$app->id}" }}">
-      <img class="app-icon media-object img-rounded" src="{{ env('AWS_URL') . $app->icon_key }}">
+      <img class="app-icon media-object img-rounded" src="{{ env('AWS_S3_ENDPOINT') . $app->icon_key }}">
     </a>
   </p>
   <div class="media-body">
@@ -22,14 +22,15 @@
   <div class="col-xs-12 col-sm-8 col-md-9">
 
     <div class="well">
-        {!! Form::open(['url' => '', 'class' => 'form-inline', 'id' => 'refresh-apikey']) !!} {{-- url('/app/preferences_refresh_apikey') --}}
+        {!! Form::open(['url' => route('update_api'), 'class' => 'form-inline']) !!} {{-- url('/app/preferences_refresh_apikey') --}}
         <legend>API Key</legend>
         <input type="hidden" name="id" value="{{ $app->id }}">
         <div class="form-group">
           <label class="sr-only" for="api-key">API Key</label>
-          <input type="text" id="api-key" name="api-key" class="form-control" readonly="readonly" value="{{ htmlspecialchars($app->api_key) }}">
+          <input type="text" class="form-control" readonly="readonly" value="{{ htmlspecialchars($app->api_key) }}">
         </div>
-        <button id="submit-refresh-apikey" type="submit" class="btn btn-warning"><i class="fa fa-refresh"></i> Refresh</button>
+        {{--{!! Form::submit('Refresh', ['class' => 'btn btn-warning']) !!}--}}
+        <button type="submit" class="btn btn-warning"><i class="fa fa-refresh"></i> Refresh</button>
         <div class="help-block">
           APIを利用するために必要なキーです.
           詳細は<a href="<?=url('/doc/api')?>">APIドキュメント</a>を参照してください.
@@ -42,14 +43,21 @@
         <input type="hidden" name="id" value="{{ $app->id }}">
         <legend>Edit Information</legend>
 
+        @if(!$errors->isEmpty() && !empty($errors->all()))
+            <div id="alert-notitle" class="alert alert-danger" style="margin-bottom: 4px">
+                <p>
+                    @foreach($errors->all() as $msg)
+                        &nbsp; {{ $msg }} <br>
+                    @endforeach
+                </p>
+            </div>
+        @endif
+
         <div class="row">
           <div class="col-lg-10 col-md-9 col-xs-12">
             <div class="form-group">
 	          <label for="title" class="control-label col-md-3 required">Title</label>
               <div class="col-md-9">
-                <div id="alert-notitle" class="alert alert-danger hidden">
-                  タイトルが入力されていません
-                </div>
                 <input class="form-control" type="text" id="title" name="title" value="{{ htmlspecialchars($app->title) }}">
               </div>
             </div>

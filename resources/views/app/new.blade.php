@@ -7,20 +7,21 @@
     <fieldset>
       <legend>New application</legend>
 
+      @if(!$errors->isEmpty() && !empty($errors->all()))
+        <div id="alert-notitle" class="alert alert-danger" style="margin-bottom: 4px">
+            <p>
+                @foreach($errors->all() as $msg)
+                    &nbsp; {{ $msg }} <br>
+                @endforeach
+            </p>
+        </div>
+      @endif
+
       <div class="row">
         <div class="col-md-10 col-sm-9">
           <div class="form-group">
 	        <label for="title" class="control-label col-md-2 required">Title</label>
             <div class="col-md-10">
-                @if(!$errors->isEmpty() && !empty($errors->get('title')))
-                    <div id="alert-notitle" class="alert alert-danger" style="margin-bottom: -4px">
-                        <p>
-                            @foreach($errors->get('title') as $msg)
-                                &nbsp; {{ $msg }} <br>
-                            @endforeach
-                        </p>
-                    </div>
-                @endif
               <input class="form-control" type="text" id="title" name="title">
             </div>
           </div>
@@ -50,15 +51,6 @@
 
       <div class="row">
         <div class="col-md-10">
-            @if(!$errors->isEmpty() && !empty($errors->get('description')))
-                <div id="alert-notitle" class="alert alert-danger" style="margin-bottom: -4px">
-                    <p>
-                        @foreach($errors->get('description') as $msg)
-                            &nbsp; {{ $msg }} <br>
-                        @endforeach
-                    </p>
-                </div>
-            @endif
           <div class="form-group">
             <label for="description" class="control-label col-md-2">Description</label>
             <div class="col-md-10">
@@ -70,15 +62,6 @@
 
       <div class="row">
         <div class="col-md-10">
-            @if(!$errors->isEmpty() && !empty($errors->get('repository')))
-                <div id="alert-notitle" class="alert alert-danger" style="margin-bottom: -4px">
-                    <p>
-                        @foreach($errors->get('repository') as $msg)
-                            &nbsp; {{ $msg }} <br>
-                        @endforeach
-                    </p>
-                </div>
-            @endif
           <div class="form-group">
             <label for="repository" class="control-label col-md-2">Repository</label>
             <div class="col-md-10">
