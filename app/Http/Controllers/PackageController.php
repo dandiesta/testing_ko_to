@@ -279,9 +279,8 @@ class PackageController extends Controller
             $tags->save();
             unset($tags);
         }
-        $key = 'package/' . $app->id . '/' . $package->id . '_' . $input['temp_name'];
-//        dd($key, env('AWS_S3_BUCKET') . '/temp-data/' . $input['temp_name']);
-        Helper::moveTempFile($key, env('AWS_S3_BUCKET') . '/temp-data/' . $input['temp_name']);
+        $key = '/package/' . $app->id . '/' . $package->id . '_' . $input['temp_name'];
+        Helper::moveTempFile($key, '/temp-data/' . $input['temp_name']);
 
         return redirect()->route('app', ['id' => $input['app_id']]);
 

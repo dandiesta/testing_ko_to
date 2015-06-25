@@ -61,16 +61,16 @@ class Helper
     public static function moveTempFile($key, $source)
     {
         $s3 = AwsFacade::get('s3');
-        $copy = [
+
+        $s3->copyObject(array(
             'Bucket' => env('AWS_S3_BUCKET'),
             'Key' => $key,
-            'CopySource' => $source,
-        ];
-        $s3->copyObject($copy);
-        $delete = [
-            'Bucket' => env('AWS_S3_BUCKET'),
-            'Key'    => $key
-        ];
-        $s3->deleteObject($delete);
+            'CopySource' => env('AWS_S3_BUCKET') . $source,
+        ));
+
+        $s3->deleteObject(array(
+            'Bucket'       => env('AWS_S3_BUCKET'),
+            'Key'          => $source,
+        ));;
     }
 }
