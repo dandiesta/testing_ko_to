@@ -39,7 +39,7 @@
     </div>
 
     <div class="well">
-        {!! Form::open(['url' => route('update_preferences'), 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data']) !!}
+        {!! Form::open(['url' => route('update_preferences'), 'class' => 'form-horizontal', 'id' => 'edit-info', 'enctype' => 'multipart/form-data']) !!}
         <input type="hidden" name="id" value="{{ $app->id }}">
         <legend>Edit Information</legend>
 
