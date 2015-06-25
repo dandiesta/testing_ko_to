@@ -12,7 +12,16 @@ class Package extends Model
 {
     protected $table = 'package';
 
-    protected $fillable = ['title', 'description'];
+    protected $fillable = [
+        'app_id',
+        'platform',
+        'file_name',
+        'title',
+        'description',
+        'ios_identifier',
+        'original_filename',
+        'file_size'
+    ];
     protected $tags = null;
     public $timestamps = false;
 

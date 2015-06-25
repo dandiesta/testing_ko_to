@@ -251,7 +251,7 @@ class ApplicationController extends Controller
 
     public function updatePreferences()
     {
-        $input = Request::all();
+        $input = Input::all();
 
         $validator = Validator::make($input, $this->rules, $this->custom_messages);
 
@@ -261,6 +261,34 @@ class ApplicationController extends Controller
 
         //icon is not yet included
         $app = Application::find($input['id']);
+
+        if (isset($input['icon-selector'])) {
+            $input['icon_name'] = str_random(10) . "." . $input['icon-selector']->getClientOriginalExtension();
+
+            $bucket = env('AWS_S3_BUCKET');
+
+            if($input['icon-selector']->isValid()) {
+                $icon = $input['icon_name'];
+                $input['icon-selector']->move(public_path() . '/uploads/', $icon);
+                $s3 = AwsFacade::get('s3');
+                $s3->deleteObject(array(
+                    'Bucket'       => env('AWS_S3_BUCKET'),
+                    'Key'          => '/' . $app->icon_key,
+                ));
+                $s3->putObject(array(
+                    'Bucket'        => env('AWS_S3_BUCKET'),
+                    'Key'           => '/app-icons/' . $input['id'] . '/' . $icon,
+                    'ACL'           => 'public-read',
+                    'SourceFile'    => public_path() . '/uploads/' . $icon
+                ));
+
+                $app->icon_key = 'app-icons/' . $input['id'] . '/' . $icon;
+
+            }
+        }
+
+
+
         $app->title = $input['title'];
         $app->description = $input['description'];
         $app->repository = $input['repository'];

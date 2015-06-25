@@ -67,12 +67,11 @@
                 <div id="alert-icon-size-limit" class="alert alert-danger hidden">
                   画像ファイルサイズが大きすぎます
                 </div>
-                <input type="hidden" id="icon-data" name="icon-data" value="">
-                <input type="file" id="icon-selector" class="hidden">
-                <div class="input-group"  id="input-group-icon">
-                  <input type="text" class="form-control droparea" id="icon-text" readonly="readonly">
-                  <a id="icon-browse" class="input-group-addon btn btn-default">Browse</a>
-                </div>
+                  {!! Form::file('icon-selector', ['id' => 'icon-selector', 'class' => 'hidden']) !!}
+                  <div class="input-group"  id="input-group-icon">
+                      <input type="text" class="form-control droparea" id="icon-text" readonly="readonly">
+                      <a id="icon-browse" class="input-group-addon btn btn-default">Browse</a>
+                  </div>
               </div>
             </div>
           </div>
