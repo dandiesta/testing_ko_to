@@ -189,12 +189,21 @@ class Application extends Model {
         return $app;
     }
 
-    public static function getAppPackages($app_id)
+    public static function getAppPackages($app_id, $platform = 'all', $tags = [])
     {
+        if ($platform == 'android') {
+            $platform = ['Android'];
+        } elseif ($platform == 'ios') {
+            $platform = ['iOS'];
+        } else {
+            $platform = ['Android', 'iOS'];
+        }
         $apps = DB::table('package')
             ->where('app_id', $app_id)
+            ->whereIn('platform', $platform)
             ->orderBy('created_at', 'desc')
             ->get();
+
         $packages = [];
         foreach ($apps as $app) {
             $app->max_file_size = 50*1024*1024;//50 MB

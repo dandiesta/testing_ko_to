@@ -46,6 +46,7 @@ class ApplicationController extends Controller
         $pf = Request::input('pf', 'all');
         $filter_open = Request::input('filter_open', 0);
         $current_page = Request::input('current_page ', 1);
+        $tags = explode(' ', Request::input('tags'));
         $is_file_size_warned = false;
 
         $input['page'] = $current_page + 1;
@@ -66,7 +67,7 @@ class ApplicationController extends Controller
         $app->tags = Application::getTagsByAppId($app_id);
         $active_tags = Application::getActiveTagsByAppId($app_id);
 
-        $packages = Application::getAppPackages($app_id);
+        $packages = Application::getAppPackages($app_id, $pf, $tags);
         foreach ($packages as $package) {
             $package->tags = Package::getTagsByPackageId($package->id);
             $package->is_installed = Package::isInstalled($package->id);

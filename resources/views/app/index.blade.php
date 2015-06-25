@@ -61,7 +61,7 @@
 @endif
     </div>
     <ul id="pf-nav-tabs" class="nav nav-tabs">
-      <li {!! $pf='android' ? 'class="active"' : '' !!} id="android">
+      <li {!! $pf=='android' ? 'class="active"' : '' !!} id="android">
         <a href="{{ "?id={$app->id}&pf=android" }}">Android</a>
       </li>
       <li {!! $pf=='ios'? 'class="active"':'' !!} id="ios">
@@ -76,7 +76,7 @@
       <a id="tag-filter-toggle" class="pull-right badge"><i class="fa fa-angle-double-{{ $filter_open?'up':'down' }}"></i></a>
           <div id="tag-filter-body" style="display: {{ ($filter_open)? 'block': 'none' }}">
 @foreach($app->tags as $tag)
-        <button id="{{ $tag->id }}" class="btn btn-default active" data-toggle="button">
+        <button id="{{ $tag->id }}" class="btn btn-default {{ in_array($app->tags, $active_tags) ? 'on active' : '' }}" data-toggle="button">
         {{ htmlspecialchars($tag->name) }}
         </button>
 @endforeach
