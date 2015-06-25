@@ -78,7 +78,7 @@
           </div>
 
           <div class="col-lg-2 col-md-3 hidden-sm hidden-xs text-center">
-            <img id="icon-preview" class="img-thumbnail droparea" style="width:96px;height:96px;" src="{{ env('AWS_URL') . $app->icon_key }}">
+            <img id="icon-preview" class="img-thumbnail droparea" style="width:96px;height:96px;" src="{{ env('AWS_S3_ENDPOINT') . $app->icon_key }}">
           </div>
         </div>
 

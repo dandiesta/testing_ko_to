@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 # general
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
@@ -271,7 +272,8 @@ class PackageController extends Controller
             return redirect()->route('upload')->with('api_error','App not Found!');
         }
 
-
+        $input['created_at'] = Carbon::today();
+        $input['updated_at'] = Carbon::today();
         $package = new Package($input);
         $package->save();
         foreach ($input['tags'] as $tag) {
