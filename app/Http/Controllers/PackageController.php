@@ -62,6 +62,7 @@ class PackageController extends Controller
         $app = Package::selectByPackageId($id);
         $app->all_tags = Tag::getAll($app->app_id);
         $app->package_tags = $helper->getArrayable(Tag::selectByPackageId($id));
+        $app->is_owner = Application::checkUserOwnerByAppId(Auth::user()->mail, $app->app_id);
 
         $data = [
             'app' => $app,
