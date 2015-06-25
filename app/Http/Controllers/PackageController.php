@@ -143,7 +143,6 @@ class PackageController extends Controller
             'package_id' => $package->id,
             'mail' => Auth::user()->mail,
             'user_agent' => $_SERVER['HTTP_USER_AGENT'],
-            'installed' => date('Y-m-d H:i:s'),
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
@@ -151,7 +150,7 @@ class PackageController extends Controller
         $install_user = AppInstallUser::findOrNewByMail(Auth::user()->mail, $data);
         $install_user->last_installed = date('Y-m-d H:i:s');
         $install_user->save();
-
+        
         $log = new InstallLog($data);
         $log->save();
 
