@@ -209,7 +209,6 @@ class Application extends Model {
         return DB::table('application_owner')
             ->insert(['owner_email' => $email, 'app_id' => $app_id]);
     }
-
     public function deleteOwners($app_id)
     {
         return DB::table('application_owner')
