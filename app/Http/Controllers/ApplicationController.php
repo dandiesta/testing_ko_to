@@ -328,4 +328,13 @@ class ApplicationController extends Controller
         return redirect()->route('preferences', ['id' => $id]);
     }
 
+    public function updateAPI()
+    {
+        $app = Application::find(Request::input('id'));
+        $app->api_key = Application::makeApiKey();
+        $app->save();
+
+        return redirect()->route('preferences', ['id' => $app->id]);
+
+    }
 }
