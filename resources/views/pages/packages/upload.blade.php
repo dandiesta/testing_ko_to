@@ -93,7 +93,11 @@
 
                 <div class="form-group">
                     <div class="col-md-10 col-md-offset-2">
-                        <button id="submit" class="btn btn-primary" disabled="disabled"><i class="fa fa-upload"></i> Upload</button>
+                        <button id="submit" class="btn btn-primary"
+                         @if (!$errors->any())
+                         {{ 'disabled="disabled"' }}
+                         @endif
+                         ><i class="fa fa-upload"></i> Upload</button>
                     </div>
                 </div>
 

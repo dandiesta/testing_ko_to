@@ -36,5 +36,23 @@ class Tag extends Model
             ->delete();
     }
 
+    public static function findOrNewByName($name, $app_id)
+    {
+        $tag = DB::table('tag')
+            ->where('name', $name)
+            ->where('app_id', $app_id)
+            ->first();
+
+        if (!$tag) {
+            $data = [
+                'name' => $name,
+                'app_id' => $app_id
+            ];
+            $tag = new Tag($data);
+            $tag->save();
+        }
+        return $tag;
+    }
+
 
 }

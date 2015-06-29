@@ -47,8 +47,11 @@ class ApplicationController extends Controller
         $pf = Request::input('pf', 'all');
         $filter_open = Request::input('filter_open', 0);
         $current_page = Request::input('current_page ', 1);
-        $tags = explode(' ', Request::input('tags'));
+        $tags = [];
         $is_file_size_warned = false;
+        if (Request::input('tags')) {
+            $tags = explode(' ', Request::input('tags'));
+        }
 
         $input['page'] = $current_page + 1;
         $next_page_url = route('app', $input);
@@ -66,7 +69,7 @@ class ApplicationController extends Controller
         $app->install_user = Application::getInstallUserByAppId($app_id);
         $app->owners = Application::getOwnersByAppId($app_id);
         $app->tags = Application::getTagsByAppId($app_id);
-        $active_tags = Application::getActiveTagsByAppId($app_id);
+        $active_tags = $tags;
 
         $packages = Application::getAppPackages($app_id, $pf, $tags);
         foreach ($packages as $package) {
@@ -163,10 +166,17 @@ class ApplicationController extends Controller
     public function postComment()
     {
         $inputs = Request::all();
+        $rules = [
+            'message'     => 'required',
+        ];
+
+        $validation = Validator::make($inputs, $rules);
+        if ($validation->fails()) {
+            return redirect()->route('comment_app', ['id' => $inputs['id']])->withInput()->withErrors($validation);
+        }
+
         $comment_count = Comment::getCountByApplication($inputs['id']);
         $mail = Auth::user()->mail;
-
-
 
         $comment = new Comment();
         $comment->app_id = $inputs['id'];

@@ -76,7 +76,7 @@
       <a id="tag-filter-toggle" class="pull-right badge"><i class="fa fa-angle-double-{{ $filter_open?'up':'down' }}"></i></a>
           <div id="tag-filter-body" style="display: {{ ($filter_open)? 'block': 'none' }}">
 @foreach($app->tags as $tag)
-        <button id="{{ $tag->id }}" class="btn btn-default {{ in_array($app->tags, $active_tags) ? 'on active' : '' }}" data-toggle="button">
+        <button id="{{ $tag->id }}" class="btn btn-default {{ in_array($tag->id, $active_tags) ? 'on active' : '' }}" data-toggle="button">
         {{ htmlspecialchars($tag->name) }}
         </button>
 @endforeach

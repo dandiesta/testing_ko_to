@@ -43,6 +43,6 @@ class AuthController extends Controller
 
         return redirect()->back()
             ->with('msg', 'Invalid Email/Password')
-            ->withInput();;
+            ->withInput();
     }
 }

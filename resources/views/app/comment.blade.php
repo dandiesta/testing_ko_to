@@ -23,7 +23,13 @@
 
     <div id="comment-form">
         {!! Form::open(array('url' => url('/app/post_comment'), 'class'=> 'form-horizontal')) !!}
-            <div id="alert-nomessage" class="alert alert-danger hidden">
+            <div id="alert-nomessage" class="alert alert-danger
+            @if ($errors->any())
+            {{ 'visible' }}
+            @else
+            {{ 'hidden' }}
+            @endif
+            ">
               コメントが入力されていません
             </div>
             {!! Form::hidden('id', $app->id) !!}

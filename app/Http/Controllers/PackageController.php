@@ -281,16 +281,19 @@ class PackageController extends Controller
             return redirect()->route('upload')->with('api_error','App not Found!');
         }
 
-        $input['created_at'] = Carbon::today();
-        $input['updated_at'] = Carbon::today();
+        $input['created_at'] = Carbon::now();
+        $input['updated_at'] = Carbon::now();
         $input['original_file_name'] = $input['file_name'];
         $input['file_name'] = $input['temp_name'];
         $package = new Package($input);
         $package->save();
-        foreach ($input['tags'] as $tag) {
-            $tags = new PackageTag(['package_id' => $package->id, 'tag_id' => $tag]);
-            $tags->save();
-            unset($tags);
+        if (isset($input['tags'])) {
+            foreach ($input['tags'] as $key => $tag) {
+                $tag_detail = Tag::findOrNewByName($tag, $input['app_id']);
+                $tags = new PackageTag(['package_id' => $package->id, 'tag_id' => $tag_detail->id]);
+                $tags->save();
+                unset($tags);
+            }
         }
         $key = '/package/' . $app->id . '/' . $package->id . '_' . $input['temp_name'];
         Helper::moveTempFile($key, '/temp-data/' . $input['temp_name']);
