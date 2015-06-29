@@ -69,18 +69,16 @@ class Application extends Model {
             ->join('application as app', 'ao.app_id', '=', 'app.id')
             ->select('app_id', 'app.*')->where('owner_email', $email)
             ->orderBy('updated_at', 'DESC')
-            ->get();
+            ->paginate(20);
 
-        $applications = [];
         foreach($app_list as $app)
         {
             $app->user_count = UserPass::getCountUsersByApp($app->app_id);
             $app->latest_user_install = self::getLatestUserInstallDate($email, $app->app_id);
             $app->notify = UserPass::isAppNotify($app->app_id);
-            $applications[] = $app;
         }
 
-        return $applications;
+        return $app_list;
     }
 
     public static function getInstalledAppsByEmail($email)
@@ -89,16 +87,14 @@ class Application extends Model {
             ->join('application as app', 'aiu.app_id', '=', 'app.id')
             ->select('app_id', 'app.*')->where('mail', $email)
             ->orderBy('app.updated_at', 'DESC')
-            ->get();
+            ->paginate(20);
 
-        $applications = [];
         foreach ($app_list as $app) {
             $app->latest_user_install = self::getLatestUserInstallDate($email, $app->app_id);
             $app->notify = UserPass::isAppNotify($app->app_id);
-            $applications[] = $app;
         }
 
-        return $applications;
+        return $app_list;
     }
 
     public static function getAppById($app_id)
@@ -209,25 +205,24 @@ class Application extends Model {
             foreach ($package_ids as $pkg) {
                 $ids[] = $pkg->package_id;
             }
-            $apps = DB::table('package')
+            $packages = DB::table('package')
                 ->where('app_id', $app_id)
                 ->whereIn('platform', $platform)
                 ->whereIn('id', $ids)
                 ->orderBy('created_at', 'desc')
-                ->get();
+                ->paginate(20);
         } else {
-            $apps = DB::table('package')
+            $packages = DB::table('package')
                 ->where('app_id', $app_id)
                 ->whereIn('platform', $platform)
                 ->orderBy('created_at', 'desc')
-                ->get();
+                ->paginate(20);
         }
-        $packages = [];
-        foreach ($apps as $app) {
-            $app->max_file_size = 50*1024*1024;//50 MB
-            $app->is_file_size_warned = ($app->max_file_size < $app->file_size);
-            $packages[] = $app;
+        foreach ($packages as $package) {
+            $package->max_file_size = 50*1024*1024;//50 MB
+            $package->is_file_size_warned = ($package->max_file_size < $package->file_size);
         }
+
         return $packages;
     }
 

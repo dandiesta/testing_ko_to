@@ -76,6 +76,7 @@ class ApplicationController extends Controller
             $package->tags = Package::getTagsByPackageId($package->id);
             $package->is_installed = Package::isInstalled($package->id);
         }
+
         $next_page_url = count($packages) > 20 ? $next_page_url : null;
 
         $data = [
@@ -148,7 +149,6 @@ class ApplicationController extends Controller
         $page = Request::input('page', 1);
         $comment_count = Comment::getCountByApplication($app_id);
         $top_comments = Comment::getTopByApplicationId($app_id, 20, ($page-1)*20);
-        $top_comments->setPath('custom/url');
         $commented_package = Package::getCommentedByIds(Comment::getPackageIdsByApplicationId($app_id));
 
         $data = [
