@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 # general
+use App\AppInstallUser;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
@@ -24,7 +25,6 @@ class ApplicationController extends Controller
 {
     protected $rules = [
         'title'         =>  'required|max:255',
-        'description'   =>  'required',
         'repository'    =>  array('required', 'regex:/(https:\/\/github.com\/)([a-zA-Z0-9_-]+)(\/)([a-zA-Z0-9_-]+)/')
     ];
 
@@ -128,6 +128,16 @@ class ApplicationController extends Controller
             'installed_apps' => $installed_apps
         ];
         return view('myApps.installed', $data);
+    }
+
+    public function deleteInstalled()
+    {
+        $id = Request::input('id', null);
+        if ($id) {
+            AppInstallUser::deleteInstalledByMail(Auth::user()->mail, $id);
+            return redirect()->route('installed_apps');
+        }
+        return redirect()->route('top_apps');
     }
 
     public function comment()

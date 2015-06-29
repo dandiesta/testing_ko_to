@@ -23,6 +23,7 @@ $router->group(['middleware' => 'auth'], function() {
     // My Apps
     Route::get('/myapps/own',       ['as' => 'my_apps',        'uses' => 'ApplicationController@my_apps']);
     Route::get('/myapps/installed', ['as' => 'installed_apps', 'uses' => 'ApplicationController@installed_apps']);
+    Route::get('/myapps/delete',    ['as' => 'delete_installed', 'uses' => 'ApplicationController@deleteInstalled']);
 
     Route::get('/top_apps', ['as' => 'top_apps', 'uses' => 'ApplicationController@top_apps']);
     Route::get('/app/comment', ['as' => 'comment_app', 'uses' => 'ApplicationController@comment']);

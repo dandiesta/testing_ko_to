@@ -37,4 +37,12 @@ class AppInstallUser extends Model {
         }
         return new AppInstallUser($new);
     }
+
+    public static function deleteInstalledByMail($mail, $id)
+    {
+        DB::table('app_install_user')
+            ->where('mail', $mail)
+            ->where('app_id', $id)
+            ->delete();
+    }
 }

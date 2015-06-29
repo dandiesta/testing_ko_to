@@ -42,7 +42,15 @@
         {!! Form::open(['url' => route('update_preferences'), 'class' => 'form-horizontal', 'id' => 'edit-info', 'enctype' => 'multipart/form-data']) !!}
         <input type="hidden" name="id" value="{{ $app->id }}">
         <legend>Edit Information</legend>
-
+        <div id="alert-notitle" class="alert alert-danger hidden" style="margin-bottom: 4px">
+            <p> Title is required </p>
+        </div>
+        <div id="alert-notitle" class="alert alert-danger hidden" style="margin-bottom: 4px">
+            <p> Title is required </p>
+        </div>
+        <div id="alert-norepository" class="alert alert-danger hidden" style="margin-bottom: 4px">
+            <p> Repository is required </p>
+        </div>
         @if(!$errors->isEmpty() && !empty($errors->all()))
             <div id="alert-notitle" class="alert alert-danger" style="margin-bottom: 4px">
                 <p>
@@ -271,6 +279,10 @@ $('#edit-info').submit(function(){
     $('#alert-notitle').removeClass('hidden');
     valid = false;
   }
+  if($('#repository').val()==''){
+      $('#alert-norepository').removeClass('hidden');
+      valid = false;
+    }
   return valid;
 });
 
