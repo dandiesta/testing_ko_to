@@ -32,6 +32,7 @@ class AppInstallUser extends Model {
                     ->where('mail', $mail)
                     ->first();
         $find = AppInstallUser::find($user->id);
+
         return $find ? $find : new AppInstallUser($new);
     }
 }
