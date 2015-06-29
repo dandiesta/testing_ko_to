@@ -108,8 +108,10 @@ class PackageController extends Controller
     public function delete_confirm()
     {
         $id = Request::input('id');
-        $data['app'] = Package::selectByPackageId($id);
+        $app = Package::selectByPackageId($id);
         $data['tags'] = Tag::selectByPackageId($id);
+        $app->is_owner = Application::checkUserOwnerByAppId(Auth::user()->mail, $id);
+        $data['app'] = $app;
 
         $data['current_page'] = Route::currentRouteName();
 
