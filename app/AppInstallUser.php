@@ -28,11 +28,13 @@ class AppInstallUser extends Model {
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
-        $user = DB::table('user_pass')
+        $app_install = DB::table('app_install_user')
                     ->where('mail', $mail)
+                    ->where('app_id', $data['app_id'])
                     ->first();
-        $find = AppInstallUser::find($user->id);
-
-        return $find ? $find : new AppInstallUser($new);
+        if ($app_install) {
+            return AppInstallUser::find($app_install->id);
+        }
+        return new AppInstallUser($new);
     }
 }
