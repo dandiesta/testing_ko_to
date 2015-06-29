@@ -33,7 +33,7 @@
                     <a href="{{ route('install_package', ['id'=>$app->id]) }}" class="btn btn-success col-xs-12"><i class="fa fa-check"></i> Installed</a>  {{-- $package->getInstallUrl() --}}
                     <dl id="installed-date">
                         <dt>Installed at</dt>
-                        <dd> {{ $app->last_date_installed->installed }} </dd>
+                        <dd> {{ $app->last_date_installed->created_at}} </dd>
                     </dl>
                  @else
                     <a href="{{ route('install_package', ['id'=>$app->id]) }}" class="btn btn-primary col-xs-12"><i class="fa fa-download"></i> Install</a> {{-- $package->getInstallUrl() --}}

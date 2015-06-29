@@ -149,10 +149,10 @@ class Package extends Model
     public static function lastDateInstalled($id)
     {
         return DB::table('install_log')
-            ->select('installed')
+            ->select('created_at')
             ->where('package_id', $id)
             ->where('mail', Auth::user()->mail)
-            ->orderBy('installed', 'desc')
+            ->orderBy('created_at', 'desc')
             ->first();
     }
     public static function installedUsers($id)
