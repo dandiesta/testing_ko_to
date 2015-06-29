@@ -36,6 +36,9 @@
 <div class="row">
 <?php endif ?>
 @endforeach
+    <div class="text-center">
+        {!! $own_apps->setPath('/myapps/own')->appends(Input::query())->render() !!}
+    </div>
 </div>
 
 <script type="text/javascript">

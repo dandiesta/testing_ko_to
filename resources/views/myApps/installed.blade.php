@@ -62,7 +62,9 @@
     </tr>
 @endforeach
   </table>
-
+    <div class="text-center">
+        {!! $installed_apps->setPath('/myapps/installed')->appends(Input::query())->render() !!}
+    </div>
 </div>
 
 <script type="text/javascript">

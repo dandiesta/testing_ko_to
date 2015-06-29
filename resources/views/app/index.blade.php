@@ -121,19 +121,9 @@
 @endforeach
     </table>
 
-    <ul class="pager">
-@if($current_page==1)
-      <li class="previous disabled"><span>Previous</span></li>
-@else
-      <li class="previous"><a href="{{ $prev_page_url }}">Previous</a></li>
-@endif
-
-@if($next_page_url)
-      <li class="next"><a href="{{ $next_page_url }}">Next</a></li>
-@else
-      <li class="next disabled"><span>Next</span></li>
-@endif
-    </ul>
+<div class="text-center">
+    {!! $packages->setPath('/app')->appends(Input::query())->render() !!}
+</div>
 
   </div>
 </div>
