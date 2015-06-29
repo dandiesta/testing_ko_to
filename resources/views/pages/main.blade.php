@@ -43,7 +43,7 @@
                     <li><a href="{{ route('my_apps') }}">Own Apps</a></li>
                 </ul>
             </li>
-            <li><a href="#">API doc</a></li>
+            <li><a href="{{ route('docs') }}">API doc</a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
