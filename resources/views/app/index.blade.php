@@ -201,5 +201,13 @@ $('#pf-nav-tabs>li').on('click', function(event){
   }
 });
 
+$('.install-link').click(function(){
+    if ($(this).hasClass('btn-primary')){
+        $(this).removeClass('btn-primary');
+        $(this).addClass('btn-success');
+        $(this).html('<i class="fa fa-check"></i> Installed');
+    }
+});
+
 </script>
 @endsection
